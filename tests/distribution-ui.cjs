@@ -1,0 +1,26 @@
+const fs=require('node:fs/promises');
+const path=require('node:path');
+module.exports=async function({js,click,waitFor,profiles,profileId,fixture,win,output}){
+  await click('Benchmark');await waitFor(()=>js("!!document.querySelector('[aria-label=\"Coletar frametimes detalhados (experimental)\"]')"),'PresentMon option through benchmark page');
+  if(await js("document.querySelector('[aria-label=\"Coletar frametimes detalhados (experimental)\"]').checked"))throw Error('PresentMon must start disabled');
+  await js("(()=>{const input=document.querySelector('[aria-label=\"Coletar frametimes detalhados (experimental)\"]');input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}));})()");await waitFor(()=>js("document.querySelector('[aria-label=\"Coletar frametimes detalhados (experimental)\"]')?.checked"),'explicit experimental capture setting');
+  await js("(()=>{const input=document.querySelector('[aria-label=\"Coletar frametimes detalhados (experimental)\"]');input.checked=false;input.dispatchEvent(new Event('change',{bubbles:true}));})()");await waitFor(()=>js("!document.querySelector('[aria-label=\"Coletar frametimes detalhados (experimental)\"]')?.checked"),'capture setting restored disabled');
+  await click('Desempenho');await waitFor(()=>js("[...document.querySelectorAll('button')].some(button=>button.textContent==='Consultar topologia')"),'read-only topology control');await click('Consultar topologia');await waitFor(()=>js("!!document.querySelector('.topology-card')"),'topology diagnostic card through IPC');
+  if(!await js("document.querySelector('.topology-card')?.textContent.includes('Topologia de fixture; sem consulta de hardware.')"))throw Error('Topology diagnostic presented fixture as physical hardware');
+  await click('Config do CS2');await click('Sua mira');
+  const before=await profiles.read(profileId),previous=before.crosshairHistory?.[0];
+  if(!previous)throw Error('Crosshair history was not saved after preview edits');
+  await js("document.querySelector('.crosshair-history').open=true");
+  await click('Recuperar mira 1');
+  if(!await js(`document.getElementById('setting-crosshair-lengthPixels').value===${JSON.stringify(String(previous.crosshair.lengthPixels))}&&!document.getElementById('unsaved-marker').hidden`))throw Error('History did not update only the draft');
+  if(JSON.stringify((await profiles.read(profileId)).settings)!==JSON.stringify(before.settings))throw Error('History wrote profile without Save');
+  await js(`(()=>{const input=document.getElementById('setting-crosshair-lengthPixels');input.value=${JSON.stringify(String(before.settings.crosshair.lengthPixels))};input.dispatchEvent(new Event('input',{bubbles:true}));})()`);await click('Salvar alterações');await click('Visão geral');
+  await click('Configurações');await waitFor(()=>js("document.querySelectorAll('.compatibility-check').length===6"),'compatibility checklist from real controller');
+  await click('Exportar compatibilidade');await waitFor(async()=>{try{return JSON.parse(await fs.readFile(path.join(fixture,'export.cfg'),'utf8')).format==='csboost-compatibility';}catch{return false;}},'sanitized compatibility export');
+  const exported=await fs.readFile(path.join(fixture,'export.cfg'),'utf8');if(/7656119\d{10}|steamPath|gamePath|token|sessionPath|C:[\\/]+Users[\\/]+[^\\/]+/i.test(exported))throw Error('Compatibility export includes account/path data');
+  await click('Criar atalho na área de trabalho');await waitFor(async()=>{try{return (await fs.stat(path.join(fixture,'CSBOOST.lnk'))).isFile();}catch{return false;}},'real Windows shortcut written only in fixture');
+  await click('Guia de uso');await click('Créditos e licenças');await click('Privacidade');
+  await js("document.querySelector('[aria-label=\"Carregar fotos e logos públicos\"]').click()");if(!await js("localStorage.getItem('csboost-public-media')==='off'"))throw Error('Public media preference not persisted');await click('Times e configs');await new Promise(resolve=>setTimeout(resolve,250));if(await js("document.querySelectorAll('.public-media img').length"))throw Error('Public media opt-out still displays loaded photos');await click('Configurações');await js("document.querySelector('[aria-label=\"Carregar fotos e logos públicos\"]').click()");
+  await js("document.querySelector('.compatibility-panel').scrollIntoView({block:'start',behavior:'instant'});new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))");
+  await fs.writeFile(path.join(output,'distribution-compatibility-QA.png'),(await win.webContents.capturePage()).toPNG());
+};

@@ -1,0 +1,2 @@
+import {createBooster} from './common.mjs';
+export default createBooster({id:'nvidia',group:'nvidia',title:'Perfil NVIDIA para FPS',profile:'full',risk:'medium',describe(ctx){return {available:!!ctx.nvidia?.supported,needed:!!ctx.nvidia?.preview?.changes.length,blocked:!!ctx.nvidia?.pendingRestore||ctx.nvidia?.canApply===false,recommended:true,reason:ctx.nvidia?.reason||'Ajustes públicos somente do perfil CS2.',tradeoffs:['Pode aumentar consumo/temperatura, reduzir filtragem e causar tearing ao desligar VSync.'],changes:ctx.nvidia?.preview?.changes??[]};}});

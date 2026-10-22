@@ -1,0 +1,5 @@
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const root=path.resolve(__dirname,'..'),base=path.join(root,'src/free'),sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+const files=['renderer/assets/preview-model.js','renderer/assets/preview-distribution-scene.png','renderer/assets/preview-distribution-provenance.json','renderer/lib/three/three.core.min.js','renderer/lib/three/three.module.min.js','renderer/lib/three/GLTFLoader.js','renderer/lib/three/BufferGeometryUtils.js','licenses/three-MIT.txt','licenses/preview3d-CREDITS.txt','licenses/CC-BY-4.0.txt','renderer/assets/preview-weapon-fallback.png'];
+const manifest={version:3,distributionReady:true,originalCSClientAssets:false,three:'0.180.0',models:[{bytes:3660860,sha256:JSON.parse(fs.readFileSync(path.join(base,'renderer/assets/preview-distribution-provenance.json'),'utf8')).packedSHA256}],files:files.map(file=>({path:file,sha256:sha(fs.readFileSync(path.join(base,file)))}))};
+const target=path.join(base,'renderer/assets/preview3d-manifest.json');fs.writeFileSync(target,JSON.stringify(manifest,null,2));console.log(sha(fs.readFileSync(target)));

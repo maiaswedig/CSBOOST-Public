@@ -1,0 +1,4 @@
+using System;using System.Collections;using System.Collections.Generic;using System.Reflection;using System.Text;using System.Web.Script.Serialization;
+class NvidiaCatalogProbe {
+ static int Main(string[] args){try{var json=new JavaScriptSerializer();var assembly=Assembly.LoadFile(System.IO.Path.GetFullPath(args[0]));var desired=assembly.GetType("NvidiaWorker").GetMethod("Desired",BindingFlags.NonPublic|BindingFlags.Static);var rows=(object[])json.DeserializeObject(Encoding.UTF8.GetString(Convert.FromBase64String(args[1])));var results=new List<object>();foreach(Dictionary<string,object> row in rows){try{desired.Invoke(null,new object[]{row["settings"],row["preset"]});results.Add(new{accepted=true});}catch(TargetInvocationException error){results.Add(new{accepted=false,error=error.InnerException.Message});}}Console.WriteLine(json.Serialize(results));return 0;}catch(Exception error){Console.Error.WriteLine(error);return 1;}}
+}

@@ -1,0 +1,44 @@
+name: Relatar um problema
+description: Relate um problema sem incluir dados pessoais ou arquivos locais.
+title: "[Problema]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Antes de publicar, remova Steam ID, e-mail, nome de usuário, caminhos pessoais, tokens e dados de perfil. Não anexe logs ou configurações sem revisar o conteúdo.
+  - type: input
+    id: version
+    attributes:
+      label: Versão do CSBOOST
+      placeholder: 1.30.0
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Ambiente sem identificadores
+      description: Windows, CPU/GPU e versões de driver/navegador somente se forem relevantes. Não inclua nome do PC ou usuário.
+    validations:
+      required: false
+  - type: textarea
+    id: steps
+    attributes:
+      label: Como reproduzir
+      description: Use conta de teste e valores fictícios.
+      placeholder: 1. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Resultado esperado e observado
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Revisão de privacidade
+      options:
+        - label: Removi Steam IDs, e-mails, caminhos de usuário, tokens e arquivos pessoais.
+          required: true

@@ -1,0 +1,58 @@
+{
+  "version": 3,
+  "distributionReady": true,
+  "originalCSClientAssets": false,
+  "three": "0.180.0",
+  "models": [
+    {
+      "bytes": 3660860,
+      "sha256": "bd6bf07cf17db7c69329d0b3c2886acd92352bbc441104dccec63e252278f0b6"
+    }
+  ],
+  "files": [
+    {
+      "path": "renderer/assets/preview-model.js",
+      "sha256": "9c0c71a823869cdad9756531ba7ae2f32d34a9c32e1afcfba8fa50b0e8ac94e8"
+    },
+    {
+      "path": "renderer/assets/preview-distribution-scene.png",
+      "sha256": "e6c60b8081ae9cc179b03b02aa5871e251994c938bc67a31fda8493728d97815"
+    },
+    {
+      "path": "renderer/assets/preview-distribution-provenance.json",
+      "sha256": "07811376a40fdebe4a33c1aab5f7fc47596a392f7f13d1b93849f97ca35bec1c"
+    },
+    {
+      "path": "renderer/lib/three/three.core.min.js",
+      "sha256": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de"
+    },
+    {
+      "path": "renderer/lib/three/three.module.min.js",
+      "sha256": "e2b5ee6bccd38fd6d8a2428546b83c5f2426d84b152ef82be8055556e3b40eb6"
+    },
+    {
+      "path": "renderer/lib/three/GLTFLoader.js",
+      "sha256": "ee2019ccb7c8c9e5aa18afb723b99082790560538124ac865749805948863b67"
+    },
+    {
+      "path": "renderer/lib/three/BufferGeometryUtils.js",
+      "sha256": "018b6ec0dcbbaea7d68b02d8d1162ab37783b9dbd4cc85fdbc35506690a993ea"
+    },
+    {
+      "path": "licenses/three-MIT.txt",
+      "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601"
+    },
+    {
+      "path": "licenses/preview3d-CREDITS.txt",
+      "sha256": "775f943763e4f612ec59f261db48bf9e7906eed03d099f9294e4c6f97a1768f4"
+    },
+    {
+      "path": "licenses/CC-BY-4.0.txt",
+      "sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411"
+    },
+    {
+      "path": "renderer/assets/preview-weapon-fallback.png",
+      "sha256": "7e4f31a329f7e31100e7d4c758dc6c37d0d0248dd378f5c8c9172b43b5eb64d2"
+    }
+  ]
+}

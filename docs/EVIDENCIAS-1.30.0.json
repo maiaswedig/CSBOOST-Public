@@ -1,0 +1,530 @@
+{
+  "schema": 1,
+  "product": "CSBOOST",
+  "version": "1.30.0",
+  "localDate": "2026-10-22",
+  "timezone": "America/Sao_Paulo",
+  "publicReleaseApproved": false,
+  "testedCodeFingerprint": "2a7f406f1a6036e9907985f6dfdd05b0bc14364a6ceca3ee926e49451e1efa51",
+  "unitTests": {
+    "schema": 1,
+    "kind": "node-tests",
+    "fingerprint": "2a7f406f1a6036e9907985f6dfdd05b0bc14364a6ceca3ee926e49451e1efa51",
+    "exitCode": 0,
+    "version": "1.30.0",
+    "startedAt": "2026-10-22T10:13:16.701Z",
+    "finishedAt": "2026-10-22T10:13:23.127Z",
+    "logSHA256": "40ec7c9a76b74d16dfd56e5d976ebf91421bcaa724b9ef154be2aee805990c5b",
+    "tests": {
+      "total": 902,
+      "passed": 895,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 7
+    },
+    "skips": [
+      "ok 101 - symbolic-link signing targets are rejected without touching the linked file # SKIP O host não permite criar symlink de arquivo.",
+      "ok 282 - CSV symlink targets are not read or removed as capture data # SKIP O host não permite criar symlink de arquivo.",
+      "ok 505 - profile files reject symbolic links for read, update and delete # SKIP The host does not permit this symbolic-link fixture.",
+      "ok 520 - apply and configured launch reject a symlink target without overwriting its destination # SKIP The host does not permit this symbolic-link fixture.",
+      "ok 587 - arquivo de recuperação com link simbólico é recusado # SKIP Windows sem privilégio de link simbólico.",
+      "ok 667 - link para fora da pasta de cache é recusado e nenhum arquivo externo é movido # SKIP Windows sem privilégio de symlink para fixture.",
+      "ok 721 - redirected users file cannot select local identity # SKIP Creating file symlinks requires Windows privileges."
+    ]
+  },
+  "interface": {
+    "full": {
+      "ok": true,
+      "checks": [
+        "professional copy into existing profile with section provenance and unchanged game files",
+        "compatibility and sanitized export through IPC",
+        "real shortcut in fixture and packaged guide actions",
+        "local crosshair history restores draft without early writes",
+        "live FOV and XYZ preview with unchanged scene perspective",
+        "preview drag keyboard wheel limits and synchronized controls",
+        "single crosshair HUD and radar scene with live changes",
+        "preview edits stay local until explicit save/apply",
+        "preview values persist through profile IPC",
+        "route-only finite entry transition and reduced-motion support",
+        "new fullscreen booster remains optional and applies/restores in original Boost Max flow",
+        "public news paragraphs and inner workspace width after full-markup refresh",
+        "all nine pages at normal and minimum width without horizontal overflow",
+        "FPS+ single-login automatic return opt-in and cancellation with mock Windows entry",
+        "FPS+ centered dark-green wizard and persistent dashboard",
+        "FPS+ three-profile guided configuration",
+        "FPS+ one Before and one After managed runs and cap restoration",
+        "FPS+ owned booster receipt and competitive native fixture preset",
+        "FPS+ optional reboot and persisted continuation",
+        "FPS+ single-run comparison and HTML export",
+        "FPS+ external-client Steam-free observation and owned restoration",
+        "explicit local Steam login and offline identity label",
+        "one report in each before-after group",
+        "local identity invalidation clears renderer without an auth event",
+        "9 navigation sections",
+        "7 config sections",
+        "profile save",
+        "cfg apply",
+        "autoexec preserved",
+        "Steam args",
+        "cfg export",
+        "official news",
+        "official rankings",
+        "team search",
+        "VProf test-log import",
+        "video preview",
+        "native temp video apply",
+        "exact video restore",
+        "Windows tuning preview",
+        "Windows tuning mock apply and restore",
+        "hardware compatibility assessment",
+        "session without personal profile",
+        "post-session frametime graph and definitions through IPC",
+        "CS2 and background process priorities",
+        "priority restoration",
+        "benchmark comparison",
+        "comparison HTML export",
+        "benchmark -condebug args",
+        "NVIDIA preview/apply/restore",
+        "CPU affinity distribution/restore",
+        "managed benchmark new-log capture and completion",
+        "managed benchmark cleanup",
+        "memory SMBIOS preview",
+        "hardware reference persists through IPC",
+        "memory change and WHEA check",
+        "hardware guide export",
+        "current CS2 v3 and legacy crosshair settings",
+        "visible RGB controls",
+        "portable JSON profile export/import",
+        "own game config preview/import",
+        "monitor modes and Hz selection",
+        "original cfg restoration",
+        "benchmark history CSV export",
+        "persistent before-after wizard checklist/groups/comparison",
+        "reversible shader cache quarantine and restore",
+        "crosshair share code preview/save/CFG/export with invisible source fields",
+        "performance reference/differences/HTML export via IPC",
+        "Boost Max preview/apply/owned rollback",
+        "firmware preparation/tool/restart-confirmation/boot verification with mock adapters",
+        "professional catalog/team search/manual lookup",
+        "professional selected sections preview and source attribution",
+        "professional clipboard and CFG export",
+        "professional new profile provenance and no game mutation",
+        "professional failed refresh warning persists into preview",
+        "professional quick section selection and stale response isolation",
+        "advanced professional video profile preview apply and exact restore",
+        "unsigned distribution notice visible before login",
+        "public-media opt-out keeps initials and persists locally",
+        "profile names stay readable at minimum width with full accessible names",
+        "Homepage visibly shows Início and a Counter-Strike 2 card without the removed slogans",
+        "At 960×640 all nine navigation destinations fit or scroll fully into the visible navigation viewport",
+        "Home primary action normal text contrast is at least 4.5:1 (minimum 16.16:1)",
+        "Config do CS2: trusted Chromium Tab input reaches an interactive element with visible keyboard focus in the hidden fixture",
+        "Home and settings body copy on solid surfaces meet 4.5:1 text contrast",
+        "Configurações summary: trusted Chromium Tab input reaches an interactive element with visible keyboard focus in the hidden fixture",
+        "Home, config editor, and settings have no horizontal overflow at 960×640",
+        "Captured premium-home-QA.png and premium-settings-QA.png at the minimum window size",
+        "automatic Booster screen hides manual choices while keeping the full booster catalog in advanced settings",
+        "home launcher starts the automatic CPU policy through real IPC and durable session",
+        "automatic idle session preserves process priorities and Windows power preference",
+        "external Process Lasso conflict pauses the governor and is explained in the session UI",
+        "observed game exit restores automatic CPU fixture preferences and removes session",
+        "advanced governor limits are visible and custom options reach a later session",
+        "advanced session exposes manual per-app memory priority",
+        "manual memory priority applies through UI and restores exact fixture value",
+        "streaming context preserves game priority",
+        "external game attaches through UI without relaunch",
+        "explicit opt-in detects externally launched CS2 and restores when it exits",
+        "change history is visible in Performance without account identifiers",
+        "JSON history export includes before/after, reason, confirmed restoration and no Steam ID or owner token",
+        "public player photo and team logo through identity-only IPC with image fallback",
+        "profile and composed config thumbnails reflect stored crosshair values",
+        "ranking grid pagination and full-list search",
+        "real console error capture probe verified",
+        "corrupt profile isolation with preserved originals and usable editor at minimum width",
+        "monitor failure recovery remains available after Steam identity loss",
+        "expanded selectable boosters with granular NVIDIA controls and optional Ultra latency, all with owned restore"
+      ],
+      "rendererErrors": [],
+      "evidence": {
+        "schema": 1,
+        "kind": "electron-ui",
+        "fingerprint": "2a7f406f1a6036e9907985f6dfdd05b0bc14364a6ceca3ee926e49451e1efa51",
+        "exitCode": 0,
+        "startedAt": "2026-10-22T10:13:16.700Z",
+        "finishedAt": "2026-10-22T10:14:31.117Z"
+      }
+    },
+    "preview3d": {
+      "ok": true,
+      "checks": [
+        "local GLTF and embedded textures under connect-src none",
+        "actual perspective camera FOV",
+        "XYZ and image/3D separation",
+        "one context and no idle rendering",
+        "dispose on leaving and recreation without leaks",
+        "single shared scene retains context across categories and updates HUD",
+        "HUD palette safezones and radar background opacity",
+        "expanded scene with category switch Escape F11 and responsive crosshair",
+        "real context loss returns to clearly labelled image",
+        "3D editor at minimum width without overflow"
+      ],
+      "rendererErrors": [],
+      "evidence": {
+        "schema": 1,
+        "kind": "electron-ui-preview3d",
+        "fingerprint": "2a7f406f1a6036e9907985f6dfdd05b0bc14364a6ceca3ee926e49451e1efa51",
+        "exitCode": 0,
+        "startedAt": "2026-10-22T10:15:20.908Z",
+        "finishedAt": "2026-10-22T10:15:37.257Z"
+      }
+    },
+    "publicMedia": {
+      "ok": true,
+      "checks": [
+        "real canonical donk settings and portrait, current team logo through closed IPC",
+        "public selected settings produce attributed composed crosshair thumbnail and differences",
+        "official Valve rankings paginate at 24 without changing source order",
+        "real FURIA logo with date-specific Valve roster and points",
+        "real huNter- roster alias opens the canonical huNter config without guessing a URL",
+        "real Astralis SVG is rebuilt as safe geometry and delivered only as an image",
+        "unknown roster link clears the previous player and preview instead of showing a stale config",
+        "saved-profile thumbnail and all three pages fit minimum window",
+        "real public media preview preserves fixture profiles and never applies a game setting"
+      ],
+      "rendererErrors": [],
+      "evidence": {
+        "schema": 1,
+        "kind": "electron-ui-pro-media",
+        "fingerprint": "2a7f406f1a6036e9907985f6dfdd05b0bc14364a6ceca3ee926e49451e1efa51",
+        "exitCode": 0,
+        "startedAt": "2026-10-22T10:15:37.603Z",
+        "finishedAt": "2026-10-22T10:15:46.485Z"
+      }
+    }
+  },
+  "distribution": {
+    "ok": true,
+    "version": "1.30.0",
+    "build": "CSBOOST-Free-130-LicenseRequests",
+    "checkedAt": "2026-10-22T10:46:11.459Z",
+    "executableSHA256": "646296808ef52b2c9262673f518ff84c576ddbc714e2e5360fb1d6dd5802e1d6",
+    "buildManifestSHA256": "433098e42bcd4d8301eec012fbbe83c1af7cf36dfdec8d47ba26acd4917d3707",
+    "packagedFiles": 130,
+    "distributionFiles": 218,
+    "sourceHashesVerified": true,
+    "hashMismatches": 0,
+    "personalOrTestFilesIncluded": false,
+    "privateOriginalServicesUsed": false,
+    "originalVisualAssetsIncluded": false,
+    "tests": {
+      "total": 902,
+      "passed": 895,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 7
+    },
+    "renderer": {
+      "checks": 107,
+      "errors": 0
+    },
+    "packagedStartup": {
+      "ok": true,
+      "integrity": {
+        "verified": true,
+        "files": 130,
+        "manifestSHA256": "433098e42bcd4d8301eec012fbbe83c1af7cf36dfdec8d47ba26acd4917d3707",
+        "authenticityVerified": false
+      },
+      "networkRequests": 0,
+      "watcher": true,
+      "recovery": true
+    },
+    "codeSigning": {
+      "configured": false,
+      "signed": false,
+      "reason": "Certificado de assinatura não configurado."
+    },
+    "packageVerifiedAfterExtraction": true,
+    "distributionPackageQA": {
+      "ok": true,
+      "archiveSHA256": "e7a11a1b07f927eea0662b6be5920c0bf3aaee1ab5786f0fb3b4b1aab6b1607a",
+      "files": 217,
+      "hashMismatches": 0,
+      "scenarios": [
+        {
+          "scenario": "normal-read-only",
+          "ok": true,
+          "rendererErrors": 0,
+          "userSettingsChanged": false,
+          "gameLaunched": false
+        },
+        {
+          "scenario": "missing-steam-detector-simulation",
+          "ok": true,
+          "rendererErrors": 0,
+          "userSettingsChanged": false,
+          "gameLaunched": false
+        }
+      ],
+      "userSettingsChanged": false,
+      "gameLaunched": false
+    },
+    "firmwareWritesPerformed": false,
+    "userSettingsChanged": false,
+    "gameLaunched": false,
+    "fpsGainMeasured": false,
+    "physicalCrossVendorValidation": false,
+    "pendingScope": [
+      "Hosted Windows/Linux CI is not connected to this local copy",
+      "Public-data terms review and hardware certification remain open release gates"
+    ]
+  },
+  "archive": {
+    "product": "CSBOOST",
+    "version": "1.30.0",
+    "build": "CSBOOST-Free-130-LicenseRequests",
+    "archive": "CSBOOST-1.30.0-Windows-x64.zip",
+    "bytes": 166351487,
+    "sha256": "e7a11a1b07f927eea0662b6be5920c0bf3aaee1ab5786f0fb3b4b1aab6b1607a",
+    "distributionManifestSHA256": "b660e8dce7a733f5f5f9211c0edc31d19038f95ce94e791e2a18e51a490a50aa",
+    "codeSigning": {
+      "configured": false,
+      "signed": false,
+      "reason": "Certificado de assinatura não configurado."
+    },
+    "authenticityVerified": false,
+    "physicalCrossVendorValidation": false,
+    "packageVerifiedAfterExtraction": true,
+    "validationReport": "analysis/free-verification/distribution-build-audit.json",
+    "createdAt": "2026-10-22T10:45:31.887Z",
+    "packageVerification": "analysis/free-verification/distribution-package-qa.json",
+    "verifiedAt": "2026-10-22T10:46:00.978Z"
+  },
+  "knownLimitations": [
+    "Código próprio licenciado sob MIT; licenças de dados e imagens de terceiros ainda aguardam resposta.",
+    "One physical NVIDIA setting applied/restored; not all presets or gameplay",
+    "Browser policy writes denied by registry ACL; effects not validated",
+    "Seven local Windows file-symlink fixtures skipped for missing privilege",
+    "External-data/image rights remain unresolved",
+    "No benchmark gain, thermal or anti-cheat certification",
+    "Unsigned candidate; no public external hash posting or Defender release submission"
+  ],
+  "physicalLocal": {
+    "nvidia": {
+      "ok": true,
+      "selected": "lowLatencyUltra",
+      "driverVersion": 61062,
+      "changed": true,
+      "restored": true,
+      "workerSHA256": "002e0f92ac683d06b9d6c4a522d210a7b8c6ee6475bd192a228272ab903eccf8",
+      "snapshotSHA256": "1f52d32d8d8a2fca455927445d6c3889f0d0651904965701f1b67e5e2a1e3787",
+      "gameLaunched": false,
+      "fpsGainMeasured": false,
+      "scope": "Physical Windows 10 NVIDIA apply/restore, CS2 closed, one catalog setting, no game or FPS measurement"
+    },
+    "shaderCache": {
+      "ok": true,
+      "changed": true,
+      "restored": true,
+      "files": 2,
+      "bytes": 55130,
+      "snapshotSHA256": "64fb6f80626959633a8c79b7d30234c2f85f08f5dfeb2dff141d7d093530d321",
+      "gameLaunched": false,
+      "fpsGainMeasured": false
+    },
+    "browserPolicies": {
+      "applied": false,
+      "effectValidated": false,
+      "nativeError": "Access denied to current-user browser policy registry key",
+      "originalValuesVerified": true,
+      "restorationPending": false,
+      "aclChanged": false,
+      "elevationRequested": false
+    },
+    "defender": {
+      "exitCode": 0,
+      "scanLogSHA256": "7f5de549081c94a01c468dfe1d3dff2bea07aa7882197bc59644dc8c88296567",
+      "signatureVersion": "1.461.143.0",
+      "productVersion": "4.18.26090.9",
+      "realTimeProtection": true,
+      "scannedBuild": "CSBOOST-Free-130-Final",
+      "capturedAt": "2026-10-22T10:15:58.4512730Z",
+      "detections": 0,
+      "submittedToMicrosoft": false,
+      "scope": "Local custom scan of final unpacked build; no vendor clearance or SmartScreen reputation",
+      "archiveScan": {
+        "exitCode": 0,
+        "archive": "CSBOOST-1.30.0-Windows-x64.zip",
+        "archiveSHA256": "bed762d7596152992c0e6d3038fd426c45414875de2e425b4cbaadda839f35a6",
+        "scanLogSHA256": "fe1d2aecd6076dfb678fecee569ad30493baa7fef77e9530570f8a9c6210a2dc",
+        "capturedAt": "2026-10-22T10:26:24.3257137Z",
+        "detections": 0
+      }
+    }
+  },
+  "remoteCI": {
+    "status": "completed",
+    "conclusion": "success",
+    "repository": "https://github.com/maiaswedig/CSBOOST",
+    "private": true,
+    "runURL": "https://github.com/maiaswedig/CSBOOST/actions/runs/39763719330",
+    "commit": "05526345ad1b51e9018098159ce5649380469a34",
+    "createdAt": "2026-10-22T10:31:18Z",
+    "updatedAt": "2026-10-22T10:33:30Z",
+    "jobs": [
+      {
+        "name": "test (ubuntu-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/maiaswedig/CSBOOST/actions/runs/39763719330/job/119773892158",
+        "startedAt": "2026-10-22T10:31:21Z",
+        "completedAt": "2026-10-22T10:31:46Z"
+      },
+      {
+        "name": "test (windows-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/maiaswedig/CSBOOST/actions/runs/39763719330/job/119773892437",
+        "startedAt": "2026-10-22T10:31:21Z",
+        "completedAt": "2026-10-22T10:32:17Z"
+      },
+      {
+        "name": "ui",
+        "conclusion": "success",
+        "url": "https://github.com/maiaswedig/CSBOOST/actions/runs/39763719330/job/119773892588",
+        "startedAt": "2026-10-22T10:31:22Z",
+        "completedAt": "2026-10-22T10:33:29Z"
+      }
+    ],
+    "windows": {
+      "schema": 1,
+      "kind": "node-tests",
+      "fingerprint": "2a7f406f1a6036e9907985f6dfdd05b0bc14364a6ceca3ee926e49451e1efa51",
+      "exitCode": 0,
+      "version": "1.30.0",
+      "startedAt": "2026-10-22T10:31:42.973Z",
+      "finishedAt": "2026-10-22T10:32:13.540Z",
+      "logSHA256": "1a55c0a551cca1fb3647f8593e2bd6a4306861643c36f3d1c4aa3a16e64b256c",
+      "tests": {
+        "total": 902,
+        "passed": 902,
+        "failed": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "skips": []
+    },
+    "ubuntu": {
+      "schema": 1,
+      "kind": "node-tests",
+      "fingerprint": "2a7f406f1a6036e9907985f6dfdd05b0bc14364a6ceca3ee926e49451e1efa51",
+      "exitCode": 0,
+      "version": "1.30.0",
+      "startedAt": "2026-10-22T10:31:25.673Z",
+      "finishedAt": "2026-10-22T10:31:43.740Z",
+      "logSHA256": "16af83ca2d369c4602052475a8c79ba4799e8e7cf3d7b6cf1deae0fd79983a58",
+      "tests": {
+        "total": 902,
+        "passed": 892,
+        "failed": 0,
+        "cancelled": 0,
+        "skipped": 10
+      },
+      "skips": [
+        "ok 1 - native process controls read, verify and restore only owned test instances # SKIP",
+        "ok 141 - parsers C\\# reais: Size variável, tipos desconhecidos, limites e layout de cache # SKIP",
+        "ok 206 - real Windows desktop preferences can be read through the native API without writes # SKIP Leitura nativa exige Windows.",
+        "ok 218 - real Windows worker returns external settings inventory without writing # SKIP",
+        "ok 266 - pinned vendor binary has the declared exact SHA-256; the test only reads it # SKIP PresentMon 2.3.1 não está no checkout; o job Windows o baixa e verifica antes dos testes.",
+        "ok 465 - native worker ABI has exact Windows Unicode structure sizes # SKIP Worker Windows não compilado neste ambiente.",
+        "ok 466 - native worker refuses resolution/driver writes and extra fields # SKIP Worker Windows não compilado neste ambiente.",
+        "ok 467 - native read-only inventory observes this desktop without applying any mode # SKIP Worker Windows não compilado neste ambiente.",
+        "ok 745 - compiled NVIDIA worker accepts the JavaScript catalog in granular modes and rejects other writes # SKIP Requires Windows .NET compiler; does not access GPU or change settings.",
+        "ok 872 - real Windows worker reports only confirmed external-governor process names # SKIP"
+      ]
+    },
+    "ubuntuSkipReasons": [
+      {
+        "test": "ok 1 - native process controls read, verify and restore only owned test instances # SKIP",
+        "reason": "Requires Windows process APIs and compiled C# workers",
+        "condition": "tests/adaptive-native.test.mjs: process.platform !== win32"
+      },
+      {
+        "test": "ok 141 - parsers C\\# reais: Size variável, tipos desconhecidos, limites e layout de cache # SKIP",
+        "reason": "Requires Windows .NET Framework C# compiler and executable fixture",
+        "condition": "tests/cpu-topology.test.mjs: process.platform !== win32"
+      },
+      {
+        "test": "ok 206 - real Windows desktop preferences can be read through the native API without writes # SKIP Leitura nativa exige Windows.",
+        "reason": "Requires Windows native desktop preference APIs"
+      },
+      {
+        "test": "ok 218 - real Windows worker returns external settings inventory without writing # SKIP",
+        "reason": "Requires compiled Windows system inventory worker",
+        "condition": "tests/diagnostics.test.mjs: process.platform !== win32"
+      },
+      {
+        "test": "ok 266 - pinned vendor binary has the declared exact SHA-256; the test only reads it # SKIP PresentMon 2.3.1 não está no checkout; o job Windows o baixa e verifica antes dos testes.",
+        "reason": "PresentMon Windows binary is downloaded and hash-verified only in the Windows job"
+      },
+      {
+        "test": "ok 465 - native worker ABI has exact Windows Unicode structure sizes # SKIP Worker Windows não compilado neste ambiente.",
+        "reason": "Requires compiled Windows display worker and Windows native APIs"
+      },
+      {
+        "test": "ok 466 - native worker refuses resolution/driver writes and extra fields # SKIP Worker Windows não compilado neste ambiente.",
+        "reason": "Requires compiled Windows display worker and Windows native APIs"
+      },
+      {
+        "test": "ok 467 - native read-only inventory observes this desktop without applying any mode # SKIP Worker Windows não compilado neste ambiente.",
+        "reason": "Requires compiled Windows display worker and Windows native APIs"
+      },
+      {
+        "test": "ok 745 - compiled NVIDIA worker accepts the JavaScript catalog in granular modes and rejects other writes # SKIP Requires Windows .NET compiler; does not access GPU or change settings.",
+        "reason": "Requires Windows .NET compiler; reflection-only catalog test, no GPU writes"
+      },
+      {
+        "test": "ok 872 - real Windows worker reports only confirmed external-governor process names # SKIP",
+        "reason": "Requires compiled Windows watcher/process worker",
+        "condition": "tests/watcher.test.mjs: process.platform !== win32"
+      }
+    ],
+    "interface": {
+      "ok": true,
+      "checks": 107,
+      "rendererErrors": [],
+      "evidence": {
+        "schema": 1,
+        "kind": "electron-ui",
+        "fingerprint": "2a7f406f1a6036e9907985f6dfdd05b0bc14364a6ceca3ee926e49451e1efa51",
+        "exitCode": 0,
+        "startedAt": "2026-10-22T10:31:58.228Z",
+        "finishedAt": "2026-10-22T10:33:25.663Z"
+      }
+    },
+    "evidenceRetention": {
+      "rawLogs": true,
+      "runSummaries": true,
+      "imageArtifactsRetained": false,
+      "reason": "GitHub account artifact storage quota reached; screenshot hashes remain in the run summary"
+    },
+    "downloadedLogs": {
+      "windows": "da995705e2d38e15b83ea54c30c87e957662dc698648865e5fdfc6004f8e8c46",
+      "ubuntu": "51bb18e661e2a00fa8447fa49d9625b86d38708bcb77fd066c340ed025713700",
+      "ui": "e9d7ef86d63ece993143b7f23f17019da543628e8d4eda703a9b006e73712335"
+    }
+  },
+  "licensing": {
+    "ownCode": "MIT selected by owner and present in LICENSE",
+    "prosettings": {
+      "status": "permission-request-sent-awaiting-reply",
+      "channel": "Official address on legal notice",
+      "scope": "User-initiated profile retrieval, display and local cache; image rights asked separately"
+    },
+    "valveRegionalStandings": {
+      "status": "public-question-open-awaiting-reply",
+      "issue": "https://github.com/ValveSoftware/counter-strike_regional_standings/issues/50",
+      "scope": "Dated standings display and six-hour local cache; no bundled dataset"
+    }
+  },
+  "evidenceStatus": "historical-before-publication-policy",
+  "supersededBy": "REVISAO-CLAUDE-2026-10-22.md and the final candidate release record"
+}

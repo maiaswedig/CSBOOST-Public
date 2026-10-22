@@ -1,0 +1,18 @@
+const fs=require('node:fs'),path=require('node:path');
+const {root,readJson,sha,check,psQuote,verifyBuild,verifyDistribution,execFileSync}=require('./distribution-package.cjs');
+const name=process.argv[2]||'CSBOOST-Free-Automatic-1-26';
+execFileSync(process.execPath,[path.join(__dirname,'audit-distribution-build.cjs'),name],{stdio:'inherit'});
+const {build,manifest,version,files}=verifyBuild(name);
+const audit=readJson(path.join(root,'analysis','free-verification','distribution-build-audit.json'));
+check(audit.ok&&audit.version===version&&audit.executableSHA256===manifest.executableSHA256&&audit.buildManifestSHA256===sha(path.join(build,'build-manifest.json')),'A fresh successful release audit is required before packaging.');
+const zip=path.join(root,'output',`CSBOOST-${version}-Windows-x64.zip`),metadata=zip.replace(/\.zip$/, '-release.json');
+for(const file of [zip,metadata,zip+'.sha256.txt'])check(!fs.existsSync(file),'Distribution already exists: '+file);
+const distribution={format:'csboost-distribution',schema:1,product:'CSBOOST',version,createdAt:new Date().toISOString(),archiveRoot:'CSBOOST/',platform:'Windows 10/11 x64',cpuVendors:['AMD','Intel'],codeSigning:manifest.codeSigning,authenticityVerified:false,physicalCrossVendorValidation:false,originalCSClientAssets:false,userDataIncluded:false,firmwareControl:'assisted-only',files:files.filter(file=>file.path!=='DISTRIBUTION-MANIFEST.json')};
+const distributionPath=path.join(build,'DISTRIBUTION-MANIFEST.json');
+if(fs.existsSync(distributionPath))check(verifyDistribution(build).version===version,'Cannot resume a different distribution.');else fs.writeFileSync(distributionPath,JSON.stringify(distribution,null,2));
+verifyDistribution(build);
+const command=`$ErrorActionPreference='Stop'; Add-Type -AssemblyName System.IO.Compression; Add-Type -AssemblyName System.IO.Compression.FileSystem; $base=${psQuote(build)}; $archive=[System.IO.Compression.ZipFile]::Open(${psQuote(zip)},[System.IO.Compression.ZipArchiveMode]::Create); try { foreach($file in [System.IO.Directory]::EnumerateFiles($base,'*',[System.IO.SearchOption]::AllDirectories)) { $relative=$file.Substring($base.Length+1).Replace('\\','/'); [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive,$file,'CSBOOST/'+$relative,[System.IO.Compression.CompressionLevel]::Optimal) | Out-Null } } finally { $archive.Dispose() }`;
+execFileSync('powershell.exe',['-NoProfile','-Command',command],{windowsHide:true,timeout:180000,stdio:'pipe'});
+const release={product:'CSBOOST',version,build:name,archive:path.basename(zip),bytes:fs.statSync(zip).size,sha256:sha(zip),distributionManifestSHA256:sha(path.join(build,'DISTRIBUTION-MANIFEST.json')),codeSigning:manifest.codeSigning,authenticityVerified:false,physicalCrossVendorValidation:false,packageVerifiedAfterExtraction:false,validationReport:'analysis/free-verification/distribution-build-audit.json',createdAt:new Date().toISOString()};
+fs.writeFileSync(metadata,JSON.stringify(release,null,2));fs.writeFileSync(zip+'.sha256.txt',release.sha256+'  '+path.basename(zip)+'\n');
+console.log(JSON.stringify({zip,metadata,...release},null,2));

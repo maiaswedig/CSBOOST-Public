@@ -1,0 +1,23 @@
+{
+  "name": "csboost-free",
+  "version": "1.30.0",
+  "private": true,
+  "description": "CSBOOST — configurações e desempenho para CS2",
+  "scripts": {
+    "build": "node tools/build-free.cjs",
+    "verify": "node tools/verify-free.cjs",
+    "build:free": "node tools/build-free.cjs",
+    "verify:free": "node tools/verify-free.cjs",
+    "test": "node tools/test-suite.cjs",
+    "test:ui": "node tools/test-ui.cjs",
+    "check:docs": "node tools/check-docs.mjs",
+    "audit:distribution": "node tools/audit-distribution-build.cjs",
+    "package:friends": "node tools/package-friends.cjs"
+  },
+  "license": "MIT",
+  "author": "Maías Wedig",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maiaswedig/CSBOOST-Public.git"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "source": "https://raw.githubusercontent.com/cktang88/3d-fps/130ac2a5c856401ec36e7d35afcfefe40c5801f4/public/assets/models/fp/ak47.glb",
+  "commit": "130ac2a5c856401ec36e7d35afcfefe40c5801f4",
+  "upstreamSHA256": "8dbf4a8eaa22a1b79a227fb85a19e99fc01238e174e31a941d8bacafcb1e6c65",
+  "packedSHA256": "bd6bf07cf17db7c69329d0b3c2886acd92352bbc441104dccec63e252278f0b6",
+  "bytes": 3660860,
+  "externalImages": [
+    {
+      "file": "arms_normal.webp",
+      "sha256": "0500bdd5e6045621d980105cc281312dd6d7fc66a6649ddbe632fea802dba881"
+    },
+    {
+      "file": "arms_basecolor.webp",
+      "sha256": "4657bc61099b7cf92084c5481c0c6d19a1d8219c8ee8c08e546f9f823fec6946"
+    }
+  ],
+  "decodedBufferViews": 53,
+  "changes": [
+    "Mesh compression decoded at build preparation; no runtime decoder/WASM",
+    "External textures embedded; no network loader",
+    "Animation clips removed; static rig retained"
+  ],
+  "thirdPartyModel": true,
+  "originalCSClientAssets": false,
+  "license": "CC-BY-4.0 with upstream CC0 components",
+  "background": {
+    "kind": "generated-original",
+    "file": "preview-distribution-scene.png",
+    "sha256": "e6c60b8081ae9cc179b03b02aa5871e251994c938bc67a31fda8493728d97815",
+    "description": "Original fictional courtyard generated for CSBOOST; not extracted from CSCLIENT/CS2"
+  }
+}

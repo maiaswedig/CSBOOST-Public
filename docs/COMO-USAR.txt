@@ -1,0 +1,98 @@
+CSBOOST — GUIA DE USO
+Versão atual: 1.30.0
+
+REQUISITOS
+Pacote candidato para Windows 10 ou 11 de 64 bits x64. Consulte COMPATIBILIDADE.md para separar alvo, testes automatizados e combinações físicas confirmadas.
+Área útil recomendada de pelo menos 960 × 640 pixels lógicos para o editor completo.
+Steam e Counter-Strike 2 instalados para usar os recursos do jogo.
+A biblioteca de execução Electron está incluída. Não é necessário instalar Node.js ou Python.
+Os auxiliares usam o .NET Framework 4.x do Windows. Drivers de GPU e ferramentas de firmware são instalações separadas.
+
+ABRIR
+1. Extraia TODO o ZIP para uma pasta sua. Não abra o aplicativo dentro do ZIP e não envie somente CSBOOST.exe.
+2. Antes de abrir, compare o SHA-256 do ZIP com o valor publicado na página oficial do GitHub Releases. A versão não tem assinatura digital e o Windows pode mostrar um aviso de publicador desconhecido.
+3. Abra CSBOOST.exe na pasta CSBOOST extraída.
+4. Com a Steam aberta, escolha Usar conta da Steam neste PC. Ou use o login oficial pelo navegador.
+5. Em Configurações, confira Compatibilidade deste PC. Você pode criar um atalho e exportar um relatório sem dados da conta.
+6. Se o CS2 acabou de ser instalado, abra-o uma vez pela Steam, feche e reabra o CSBOOST.
+
+CONFIGURAÇÕES
+Config do CS2: crie/importa um perfil, ajuste os controles, Salvar alterações e Aplicar no CS2.
+Aplicar grava csboost.cfg e guarda a cópia anterior. O autoexec existente é preservado.
+Inicie o jogo pelo botão com a config aplicada, ou carregue exec csboost.cfg no console.
+Mira, arma/FOV, HUD e radar usam uma cena demonstrativa compartilhada. F11 amplia; Esc volta.
+Histórico local guarda até cinco miras anteriores de cada perfil. Recuperar altera só o rascunho até salvar.
+Times e configs, Ranking e Notícias oferecem links oficiais no navegador nesta candidata.
+As consultas e imagens externas ficam bloqueadas no processo principal, inclusive o cache antigo.
+Use Limpar dados públicos antigos para remover os arquivos reconhecidos de cache; perfis e backups são preservados.
+Miniaturas locais continuam mostrando a mira salva.
+
+DESEMPENHO E BENCHMARK
+Em Desempenho, use Ativar Boost Máximo: o motor analisa o PC e calcula os ajustes compatíveis, sem exigir seleção manual.
+O automático preserva resolução, limite de FPS, captura e afinidade. Na bateria ou sem confirmação de energia, preserva também o perfil NVIDIA e o plano de energia. Em Ryzen X3D, preserva o plano ativo. A política de energia é compartilhada entre Boost e sessão; só escolhe Alto desempenho quando AC, desktop, CPU não X3D e plano disponível são confirmados.
+Em Perfil NVIDIA do CS2, o preset Recomendado combina gestão de energia, maior taxa de atualização disponível, filtragem em alto desempenho, otimizações de textura e baixa latência. Ajustes que o driver não reconhece ficam fora da aplicação; os valores anteriores são guardados para restauração. Nas opções avançadas de Desempenho, cada controle NVIDIA compatível pode ser escolhido separadamente. O modo de latência Ultra é experimental, não entra no automático e deve ser comparado com o modo padrão; ele prioriza latência e pode reduzir throughput, sem promessa de FPS.
+Em Monitor, cor e G-SYNC, abra o Painel NVIDIA ou as Configurações de tela do Windows. Escolha a resolução nativa e a maior frequência estável do monitor; ajuste cor e escala conforme sua preferência. Ative G-SYNC somente em monitor compatível. Essas opções de tela não prometem aumento de FPS e não são forçadas pelo CSBOOST.
+O CSBOOST identifica fabricante e modelo de cada GPU pelos IDs PCI, inclusive em PCs com mais de um adaptador. O booster do Windows aplica a preferência de GPU de alto desempenho ao CS2 e permite restaurar o valor anterior. GPUs NVIDIA compatíveis também recebem perfil por jogo via NVAPI, com prévia e restauração.
+
+Para Radeon, Desempenho → CPU, RAM e GPU mostra um perfil sugerido do Adrenalin para o CS2, abre o executável AMD apenas quando a assinatura foi confirmada e oferece o guia oficial de perfis por jogo. As opções Anti-Lag, Chill, Boost, VSync e filtragem dependem do modelo e do driver e precisam ser aplicadas no perfil do CS2 dentro do Adrenalin; o app não grava valores privados do driver. Compare cada escolha no benchmark.
+Feche o CS2 antes de aplicar/restaurar ajustes persistentes. Os boosters ficam disponíveis em Configurações avançadas; marque Selecionar os ajustes manualmente para personalizar. Latência NVIDIA On e Ultra são opções mutuamente exclusivas.
+A aba CPU, RAM e GPU mostra PBO/CO, XMP/EXPO e ferramentas de ajuste por fabricante. Os guias abrem somente páginas oficiais; nenhum clock, tensão ou timing é gravado pelo CSBOOST.
+Em Desempenho → Apps e memória, o Discord tem ajustes locais para aceleração de hardware, início minimizado, permanência na bandeja e abertura com o Windows. Feche completamente o Discord antes de aplicar ou restaurar. O CSBOOST guarda somente os valores alterados e oferece restauração; preferências de privacidade, clipes, notificações internas e overlay são ajustadas no próprio Discord.
+Iniciar CS2 na página Início prepara uma sessão com otimização automática de CPU. Mantenha o CSBOOST aberto durante a sessão; o jogo iniciado diretamente fora do app não cria essa sessão sozinho.
+O monitor mede carga pelo auxiliar nativo. Com CS2 em primeiro plano, reduz temporariamente a prioridade somente de navegadores e sincronizadores conhecidos quando há pressão sustentada de CPU. A lista inclui Chrome, Edge, Firefox, Brave, Opera, Vivaldi, OneDrive, Dropbox, Google Drive e interface Steam.
+Não encerra aplicativos, não aumenta a prioridade do jogo e não restringe seus núcleos no automático. OBS, Discord, Teams, áudio e serviços do Windows ficam fora do balanceamento. A prioridade original é restaurada ao sair do jogo, perder foco ou cessar a disputa por CPU; a sincronização pode atrasar enquanto você joga. Se detectar Process Lasso ou ProcessGovernor, o CSBOOST pausa suas regras automáticas e libera apenas prioridades próprias ainda não alteradas por terceiros. O aviso informa qual processo conhecido foi detectado. Outros gerenciadores só serão incluídos depois de validar seus nomes em um computador com eles instalados.
+Durante uma sessão, o CSBOOST também confere o plano de energia a cada 30 segundos. Se ele mudar fora do aplicativo, a sessão mostra o plano inicial e o atual. O CSBOOST não reativa nem reverte automaticamente uma escolha feita pelo Windows ou por outro programa.
+Para evitar alternâncias repetidas, o automático limita por padrão cada processo a 3 reduções em uma janela móvel de 10 minutos. Depois de cada restauração, espera 30, 60 e 120 segundos em sequência; sob pressão contínua, reavalia uma redução ativa após no máximo 60 segundos. Perda de foco, queda da disputa por CPU ou fim da sessão restauram antes. Em Configurações avançadas da sessão, você pode escolher 2, 3 ou 4 reduções, uma janela de 5, 10 ou 15 minutos e um recuo inicial de 15, 30 ou 60 segundos. A atividade da sessão mostra a contagem por processo e registra quando o limite ou o recuo impede outra redução. Esses valores são proteções contra oscilação, não ajustes ideais nem promessa de FPS; compare o comportamento no seu PC.
+O app não desativa serviços do Windows em massa. Em Configurações avançadas da sessão, as opções manuais podem reduzir prioridade de processos escolhidos, sem encerrar programas.
+O CSBOOST não gerencia EcoQoS por decisão de produto: navegadores como Chrome e Edge controlam seu próprio modo de eficiência por processo, e uma mudança do app poderia competir com essa política. A API do Windows permite consultar e restaurar o estado; não se trata de uma limitação técnica da API. Nas Configurações avançadas da sessão, você pode selecionar prioridade de memória baixa para processos de fundo específicos. O valor original é lido, confirmado após a mudança e restaurado ao encerrar; se outra ferramenta mudar o valor, o CSBOOST preserva essa alteração. A lista também mostra memória em uso e o app nunca encerra programas por você.
+Nas Configurações avançadas da sessão, você pode desligar o automático e escolher prioridades/afinidade manualmente. Sob pressão sustentada de CPU, o automático também pode reduzir temporariamente navegadores e clientes de sincronização (OneDrive, Dropbox e Google Drive); a sincronização pode atrasar enquanto você joga. O estado temporário próprio possui registro de recuperação.
+FPS+ usa uma medição Antes e uma Depois. O mapa da Oficina precisa estar instalado; use o botão do aplicativo para abrir a página.
+A medição acompanha VProf real, aguarda fechar o jogo e restaura seu limite de FPS anterior quando o estado continua reconhecido.
+O benchmark mantém o plano de energia atual Antes e Depois e registra o plano lido. A comparação guiada avisa quando não consegue confirmar a mesma energia; históricos antigos sem esse registro continuam identificados como antigos.
+Em Configurações avançadas de medição, você pode ativar PresentMon ETW experimental. A opção começa desativada, exige administrador ou Usuários de Log de Desempenho e não aplica mudanças no Windows. Se indisponível, VProf continua sendo a fonte do resultado. Os dados ETW são separados do VProf: mostra mediana, P95/P99, 1% low desta série e picos experimentais. A captura começa depois da fase VProf e pode perder quadros iniciais; API gráfica e HAGS permanecem desconhecidos, então razões de tempo ocupado ficam ocultas.
+Em Configurações avançadas, Consultar topologia lê CPU Sets e cache L3 sob demanda. Durante uma sessão do CS2, o estado Parked é amostrado a cada 10 segundos. É diagnóstico experimental, somente leitura, sem afinidade, CPU Sets de escrita ou automação; a amostra não informa em qual domínio o jogo executa. O teste físico em X3D de dois CCDs e Intel híbrida ainda não foi feito.
+Em Configurações avançadas, Auditoria de ajustes externos consulta planos de energia, serviços monitorados, valores documentados do Registro e divergências de jogo/captura que tenham referência anterior do CSBOOST. Cada item mostra fonte ou critério, confiança e estado encontrado/não encontrado/desconhecido. Plano personalizado, serviço desativado ou valor fora da referência não identifica quem o alterou nem prova ganho de desempenho. Planos ocultos e preferências sem histórico próprio podem ficar desconhecidos. Atualizar e exportar o relatório não aplica, reverte nem remove ajustes.
+O balanceamento dinâmico de CPU fica suspenso na medição controlada; o Antes/Depois compara os ajustes persistentes. A CPU automática acompanha a sessão normal de jogo.
+Mantenha iguais resolução/cena/condições para comparar. O aplicativo não promete ganho de FPS em todo computador.
+
+CPU, MEMÓRIA E OVERCLOCK
+PBO/Curve Optimizer são específicos de CPUs AMD compatíveis. O CSBOOST identifica CPU/placa, registra uma referência e abre o Ryzen Master oficial; aplicação e reversão continuam na ferramenta AMD ou BIOS.
+Em Intel, o XTU oficial exige processador desbloqueado compatível e chipset apropriado; confirme CPU e placa no suporte Intel antes de instalar. XMP/EXPO dependem do kit, placa e BIOS. O app registra referência e confere propriedades após reiniciar, sem ativar firmware automaticamente.
+Para GPU, o CSBOOST destaca páginas oficiais da NVIDIA App, AMD Adrenalin ou Intel Arc conforme o nome detectado, além do MSI Afterburner/OC Scanner. Use o teste da sua própria placa; limites de modelos parecidos não determinam clocks estáveis para o seu exemplar. Faça benchmark e teste de estabilidade, e reverta pelo software do fabricante se houver travamento, artefatos ou temperaturas inadequadas.
+Nem Ryzen Master nem Intel XTU são instalados ou redistribuídos por este pacote.
+
+ATUALIZAR
+Encerre sessões e medições antes de fechar. Para maior previsibilidade, restaure os ajustes persistentes que desejar voltar ao estado anterior.
+Extraia a nova versão em OUTRA pasta; não misture arquivos de versões. Os perfis/backups permanecem em %APPDATA%\csboost-free.
+Abra a nova versão e use Criar atalho na área de trabalho. Preserve a versão anterior até conferir a nova.
+Não há atualizador automático nem sincronização em nuvem nesta distribuição.
+
+REMOVER
+Antes de apagar a pasta, encerre as sessões e use os botões de restauração para os ajustes que deseja desfazer.
+Apagar o aplicativo não restaura por si só ajustes persistentes. Perfis e backups ficam na pasta de dados indicada acima.
+
+SUPORTE
+Se o monitor de sessão parar, use Encerrar para recuperar e confirme a saída. O auxiliar separado tenta restaurar os ajustes temporários; reabra o app e confira o resultado da recuperação. Boost persistente continua salvo.
+Se a recuperação do cache de shaders entrar em conflito, feche o CS2 e tente Restaurar cache anterior. O botão Encerrar recuperação preservando caches exige confirmação, guarda um recibo com os caminhos e preserva todos os caches; encerra o acompanhamento automático sem apagar ou restaurar os arquivos restantes. Diário adulterado ou caminho não validado exige recuperação manual.
+Perfis danificados são sinalizados em Config do CS2, sem impedir os demais. Os arquivos originais ficam preservados na pasta dos perfis para recuperação manual.
+Exportar compatibilidade salva Windows/CPU/GPU e estados dos módulos, sem Steam ID, caminhos de instalação, tokens, configurações ou perfis.
+Esse relatório só é criado/exportado por sua ação; não há envio automático.
+Se um arquivo foi bloqueado ou ficou incompleto, confira a origem e o SHA-256 do ZIP e extraia novamente o pacote completo.
+Esta entrega não tem certificado de assinatura digital Windows. A integridade por hash não autentica o editor.
+Não desative Defender/antivírus, não crie exclusões nem instale certificados para contornar um bloqueio. Se o hash do ZIP oficial confere, anote o nome da detecção e envie somente o arquivo marcado ao portal Microsoft Security Intelligence, indicando detecção incorreta. O portal limita arquivos enviados a 50 MB; para arquivos maiores, use o envio oficial por URL. Espere a análise da Microsoft antes de redistribuir.
+
+ESCOPO
+Otimizações e recuperação são próprias do CSBOOST. Não inclui serviços/presets privados do CSCLIENT.
+Sem backend automático de saturação exclusiva por jogo, resoluções personalizadas ou escrita universal PBO/CO/XMP.
+FACEIT/GC: a sessão observa o jogo iniciado por você pelo cliente; não controla nem modifica o anti-cheat.
+O pacote foi testado em arquivos/adaptadores e em inicialização Windows real. Combinações AMD/Intel simuladas não equivalem a homologação física de todos os modelos.
+Retenha LICENSE-CSBOOST.txt, NOTICE-CSBOOST.txt, DEPENDENCIAS.md e os avisos de terceiros ao compartilhar o pacote completo.
+
+CATEGORIAS DE DESEMPENHO
+Em Desempenho, use Todos, GPU, Jogo, Windows, CPU e energia ou Rede.
+Para escolher ajustes, abra Configurações avançadas dos boosters e marque Personalizar seleção.
+A seleção é mantida entre categorias; aplicar considera todos os marcados, mesmo os ocultos pelo filtro.
+Ponteiro sem aceleração e menus imediatos são preferências opcionais do Windows, sem promessa de FPS.
+O cache de shaders NVIDIA entra no automático somente se o driver confirmar que está desligado no perfil do CS2.
+Rede mostra conexão e velocidade do enlace; não mede ping ou velocidade da internet nem altera DNS/TCP.
+FPS+ mantém uma execução Antes e uma Depois, com seleção compatível por hardware.

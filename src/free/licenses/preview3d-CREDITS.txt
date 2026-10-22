@@ -1,0 +1,36 @@
+CSBOOST — independent 3D preview asset attribution
+
+Packed source: cktang88 / IRONLINE, public/assets/models/fp/ak47.glb
+https://github.com/cktang88/3d-fps/tree/130ac2a5c856401ec36e7d35afcfefe40c5801f4
+Source commit: 130ac2a5c856401ec36e7d35afcfefe40c5801f4
+Upstream SHA-256: 8dbf4a8eaa22a1b79a227fb85a19e99fc01238e174e31a941d8bacafcb1e6c65
+Upstream README identifies the modified first-person models as CC BY 4.0 unless noted.
+https://github.com/cktang88/3d-fps/blob/130ac2a5c856401ec36e7d35afcfefe40c5801f4/README.md#credits--licences
+
+Arms: "Fps arms" by DJMaesen (bumstrum), Creative Commons Attribution.
+https://sketchfab.com/3d-models/fps-arms-9452ce4cddde4110a4fd73e555a8e412
+Arm rig and grip reference: "FPS AK-74m animations" by ccransh.
+https://sketchfab.com/3d-models/fps-ak-74m-animations-94be8385c402474cacd39bc096c6ca14
+Gun mesh/material adaptations via AetherRadar / Operation Steel Tide.
+https://github.com/AetherRadar/operation-steel-tide
+Underlying weapon assets credited upstream as CC0 to nisu, taradavies and Quaternius (Ultimate Guns).
+https://quaternius.com/packs/ultimategun.html
+Modified static rig / poses / material preparation: cktang88 / IRONLINE.
+Please retain all source credits above when redistributing this asset.
+
+CC BY 4.0: https://creativecommons.org/licenses/by/4.0/
+Complete legal text accompanies the application as CC-BY-4.0.txt.
+No endorsement by any of these authors is implied.
+
+CSBOOST preparation: compressed geometry decoded offline; two external arm textures embedded;
+all animation clips removed; model stored as a local data script to preserve connect-src none.
+Static rig retained. CSBOOST's camera, controls, lighting, lifecycle and preview UI are independent.
+No IRONLINE game code, Fab source/template files or motion JSON are included.
+No CSCLIENT code, models, textures, server data or other assets are included.
+
+three.js 0.180.0 and GLTFLoader: MIT, see three-MIT.txt.
+Local GLTFLoader adaptation uses HTML image loading for embedded blob textures under the local CSP.
+meshoptimizer 0.25.0 is a build preparation dependency only and is not included in the application.
+Scene background for the shareable distribution: original generated fictional courtyard,
+assets/preview-distribution-scene.png. It is not extracted from CSCLIENT or CS2.
+The unified preview is illustrative; game camera, shading and final rendering differ.

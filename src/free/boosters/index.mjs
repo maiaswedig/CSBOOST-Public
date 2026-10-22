@@ -1,0 +1,17 @@
+import {BROWSER_POLICIES} from '../browser-policies.mjs';
+import {DESKTOP_EFFECTS} from '../desktop-preferences.mjs';
+import driverEffects from './nvidia-driver-effects.mjs';
+import shaderCache from './nvidia-shader-cache.mjs';
+import {windowsBooster} from './common.mjs';
+import video from './video.mjs';
+import gameMode from './windows-game-mode.mjs';
+import gpu from './windows-gpu.mjs';
+import capture from './windows-capture.mjs';
+import nvidia from './nvidia.mjs';
+import power from './power.mjs';
+import fso from './windows-fso.mjs';
+import nvidiaTexture from './nvidia-texture.mjs';
+import nvidiaLowLatencyUltra from './nvidia-low-latency-ultra.mjs';
+export const BOOSTERS=Object.freeze([video,gameMode,gpu,capture,nvidia,power,fso,shaderCache,windowsBooster('mouseAcceleration','Ponteiro sem aceleração',{profile:'full',recommended:false}),windowsBooster('menuDelay','Menus com resposta imediata',{profile:'full',recommended:false}),...BROWSER_POLICIES.map(item=>windowsBooster(item.id,item.name,{profile:'full',recommended:false})),...nvidiaTexture,...driverEffects,nvidiaLowLatencyUltra,...DESKTOP_EFFECTS.map(item=>windowsBooster(item.id,item.name,{profile:'full',recommended:false}))]);
+export const BOOST_IDS=Object.freeze(BOOSTERS.map(item=>item.id));
+export const BOOST_GROUPS=Object.freeze([...new Set(BOOSTERS.map(item=>item.group))]);

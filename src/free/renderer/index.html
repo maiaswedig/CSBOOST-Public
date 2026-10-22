@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+    <meta name="color-scheme" content="dark" />
+    <title>CSBOOST</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./preview.css" />
+    <link rel="stylesheet" href="./premium.css" />
+    <link rel="stylesheet" href="./premium-fps.css" />
+    <script src="./fps-view.js" defer></script>
+    <script src="./measurement-view.js" defer></script>
+    <script src="./crosshair-preview.js" defer></script>
+    <script src="./game-preview.js" defer></script>
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <div class="titlebar">
+      <div class="titlebar-brand"><span class="mini-mark">C<span>↗</span></span><span>CSBOOST</span></div>
+      <div class="window-controls">
+        <button id="window-minimize" type="button" title="Minimizar" aria-label="Minimizar"><span class="minimize-symbol"></span></button>
+        <button id="window-close" type="button" title="Fechar" aria-label="Fechar"><span class="close-symbol">×</span></button>
+      </div>
+    </div>
+    <div id="app"><div class="boot-screen"><span class="spinner"></span><p>Preparando seu CSBOOST…</p></div></div>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <dialog id="prompt-dialog">
+      <form id="prompt-form" method="dialog">
+        <div class="dialog-icon" id="dialog-icon"></div>
+        <h2 id="dialog-title"></h2>
+        <p id="dialog-description"></p>
+        <label id="dialog-field-label" for="dialog-field">Nome do perfil</label>
+        <input id="dialog-field" type="text" maxlength="60" autocomplete="off" />
+        <div class="dialog-actions"><button class="button button-secondary" id="dialog-cancel" type="button">Cancelar</button><button class="button button-primary" id="dialog-submit" type="submit">Salvar</button></div>
+      </form>
+    </dialog>
+  </body>
+</html>

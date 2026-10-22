@@ -1,0 +1,109 @@
+name: Tests
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+
+jobs:
+  test:
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '24'
+      - name: Use canonical Windows fixture directory
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $fixtureTemp = node -e "console.log(require('node:fs').realpathSync(process.env.RUNNER_TEMP))"
+          if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $fixtureTemp -PathType Container)) { throw 'Runner fixture directory is unavailable.' }
+          "TEMP=$fixtureTemp" >> $env:GITHUB_ENV
+          "TMP=$fixtureTemp" >> $env:GITHUB_ENV
+      - name: Record Node version
+        run: node --version
+      - name: Check documentation versions and links
+        run: node tools/check-docs.mjs
+      - name: Download and verify pinned PresentMon
+        if: runner.os == 'Windows'
+        run: node tools/prepare-presentmon.cjs
+      - name: Compile all Windows workers
+        if: runner.os == 'Windows'
+        run: |
+          node tools/build-cpu.cjs
+          node tools/build-display.cjs
+          node tools/build-frame.cjs
+          node tools/build-nvidia.cjs
+          node tools/build-recovery.cjs
+          node tools/build-system.cjs
+          node tools/build-topology.cjs
+          node tools/build-watcher.cjs
+      - name: Run unit and integration tests
+        run: npm test
+      - name: Record unit-test evidence in run summary
+        if: always()
+        shell: node {0}
+        run: |
+          const fs = require('node:fs');
+          const file = 'analysis/free-verification/node-tests-evidence.json';
+          const evidence = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : {error: 'No test evidence was produced; inspect the failed step.'};
+          const heading = '## Unit tests — ' + process.platform + '\n\n';
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, heading + '```json\n' + JSON.stringify(evidence, null, 2) + '\n```\n\nRaw test output is retained in the run logs. Artifact upload is unavailable because the account storage quota was reached.\n');
+          console.log(JSON.stringify(evidence));
+          if (!fs.existsSync(file)) process.exitCode = 1;
+
+  ui:
+    timeout-minutes: 15
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '24'
+      - name: Use canonical Windows fixture directory
+        shell: pwsh
+        run: |
+          $fixtureTemp = node -e "console.log(require('node:fs').realpathSync(process.env.RUNNER_TEMP))"
+          if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $fixtureTemp -PathType Container)) { throw 'Runner fixture directory is unavailable.' }
+          "TEMP=$fixtureTemp" >> $env:GITHUB_ENV
+          "TMP=$fixtureTemp" >> $env:GITHUB_ENV
+      - name: Record Node version
+        run: node --version
+      - name: Install and verify Electron for UI tests
+        run: |
+          npm install --no-save --package-lock=false electron@44.4.3
+          if ($LASTEXITCODE -ne 0) { throw 'Electron could not be installed; UI tests cannot run.' }
+          node -e "const fs=require('node:fs'); const electron=require('electron'); const version=require('electron/package.json').version; if(version!=='44.4.3'||!fs.existsSync(electron)) throw new Error('Expected Electron 44.4.3 was not installed correctly.');"
+          if ($LASTEXITCODE -ne 0) { throw 'Electron verification failed.' }
+          # Match the real product name for the native desktop-shortcut test.
+          $electronRuntime = node -p "require('electron')"
+          $qaLauncher = Join-Path (Split-Path -Parent $electronRuntime) 'CSBOOST.exe'
+          Copy-Item -LiteralPath $electronRuntime -Destination $qaLauncher
+          "CSBOOST_ELECTRON_PATH=$qaLauncher" >> $env:GITHUB_ENV
+      - name: Run UI tests
+        env:
+          CSBOOST_REQUIRE_UI: '1'
+        run: npm run test:ui
+      - name: Run publication policy interface tests
+        env:
+          CSBOOST_REQUIRE_UI: '1'
+          CSBOOST_UI_PUBLICATION_ONLY: '1'
+        run: npm run test:ui
+      - name: Record interface evidence in run summary
+        if: always()
+        shell: node {0}
+        run: |
+          const fs = require('node:fs');
+          const crypto = require('node:crypto');
+          const folder = 'analysis/free-ui-qa';
+          const file = folder + '/results.json';
+          const result = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : {ok: false, error: 'No interface evidence was produced; inspect the failed step.'};
+          const screenshots = fs.existsSync(folder) ? fs.readdirSync(folder).filter(name => name.endsWith('.png')).map(name => ({file: name, sha256: crypto.createHash('sha256').update(fs.readFileSync(folder + '/' + name)).digest('hex')})) : [];
+          const evidence = {ok: result.ok, checks: result.checks, rendererErrors: result.rendererErrors, error: result.error, evidence: result.evidence, screenshots};
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, '## Interface tests\n\n```json\n' + JSON.stringify(evidence, null, 2) + '\n```\n\nRaw output is retained in run logs. Screenshot hashes are recorded; remote image files are not retained while artifact storage is unavailable.\n');
+          console.log(JSON.stringify({ok: result.ok, checks: result.checks?.length, rendererErrors: result.rendererErrors, evidence: result.evidence}));
+          if (!fs.existsSync(file)) process.exitCode = 1;

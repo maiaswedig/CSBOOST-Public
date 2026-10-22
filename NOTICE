@@ -1,0 +1,22 @@
+CSBOOST 1.30.0 — avisos da distribuição
+
+O código original do CSBOOST é distribuído sob a licença MIT em LICENSE. Componentes, modelos, fontes, imagens e dados de terceiros mantêm suas próprias licenças e condições.
+
+CSBOOST é independente e não é afiliado, endossado nem patrocinado por Valve, Steam, NVIDIA, AMD ou Intel. Counter-Strike 2, Steam, os fabricantes e suas marcas pertencem aos respectivos titulares.
+
+Esta distribuição não inclui código, binários, modelos, texturas, capturas ou serviços do CSCLIENT.
+
+Electron 44.4.3 e dependências incorporadas: LICENSE-Electron.txt e LICENSES.chromium.html fornecidos no runtime oficial.
+Intel PresentMon 2.3.1: MIT, licenses/PresentMon-MIT.txt e provenance em licenses/PresentMon-PROVENANCE.json.
+Inter: SIL Open Font License, renderer/fonts/OFL.txt.
+Definições públicas NVIDIA NVAPI: MIT, licenses/NVAPI-MIT.txt.
+Codec adaptado de akiver/csgo-sharecode 7.0.1: MIT, licenses/csgo-sharecode-MIT.txt.
+three.js / GLTFLoader 0.180.0: MIT, licenses/three-MIT.txt.
+Modelo/braços independentes da prévia: CC BY 4.0 e componentes CC0 indicados na origem. Autores, links, alterações e atribuições completas: licenses/preview3d-CREDITS.txt; texto da licença: licenses/CC-BY-4.0.txt.
+Fundo: imagem original gerada para o projeto, sem extração de mapas/visuais do CSCLIENT/CS2.
+
+As licenças citadas não concedem endosso dos autores ou fabricantes. Steam, CS2, drivers e ferramentas AMD/Intel são produtos separados, não redistribuídos neste pacote. Notícias/ranking/configurações profissionais são consultados em fontes públicas identificadas, sem dataset privado embutido. A revisão das condições de uso das fontes externas está em docs/FONTES-DE-DADOS.md e continua pendente onde indicado.
+
+build-manifest.json registra os componentes e hashes da instalação. DISTRIBUTION-MANIFEST.json registra todos os arquivos enviados. Esses hashes detectam alterações/incompletude e não substituem assinatura digital ou verificação da origem do download.
+
+Candidata de publicação revisada em 22/10/2026: consultas de ProSettings, fotos/logos, rankings e notícias desativadas em produção; apenas links oficiais. Veja docs/PROCEDENCIA.md.

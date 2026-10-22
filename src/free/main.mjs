@@ -1,0 +1,186 @@
+import {createDiscordTuning} from './discord-tuning.mjs';
+import {app,BrowserWindow,ipcMain,Menu,dialog,shell,clipboard,screen,nativeImage} from 'electron';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {createSteamAuth} from './steam-auth.mjs';
+import {createLocalSteamAuth} from './local-steam-auth.mjs';
+import {createWatcher} from './watcher.mjs';
+import {decideClose} from './close-policy.mjs';
+import {createProfiles} from './profiles.mjs';
+import {createSystem,detectSteam} from './system.mjs';
+import {createController} from './controller.mjs';
+import {createPublicationServices,PUBLICATION_POLICY} from './publication-policy.mjs';
+
+
+import {createBenchmarks} from './benchmarks.mjs';
+import {createGameSessions} from './sessions.mjs';
+import {PRO_VIDEO_FIELDS,planProVideo} from './pro-video.mjs';
+import {createOptimizations,planVideoPreset} from './optimizations.mjs';
+import {createWindowsTuning} from './windows-tuning.mjs';
+import {createProcessTuning} from './process-tuning.mjs';
+import {createOptimizationEngine} from './engine.mjs';
+import {createCpuAffinity} from './cpu-affinity.mjs';
+import {createNvidia} from './nvidia.mjs';
+import {createNvidiaControlPanel} from './nvidia-control-panel.mjs';
+import {createBenchmarkRunner} from './benchmark-runner.mjs';
+import {createBenchmarkAdapter} from './benchmark-adapter.mjs';
+import {startRecoveryGuard} from './recovery-guard.mjs';
+import {createAmdTuning} from './amd-tuning.mjs';
+import {createGpuDiagnostics} from './gpu-diagnostics.mjs';
+import {createBenchmarkFpsCap} from './benchmark-fps-cap.mjs';
+import {createBenchmarkContext} from './benchmark-context.mjs';
+import {createMemoryTuning} from './memory-tuning.mjs';
+import {createProfileTransfer} from './profile-transfer.mjs';
+import {createDisplays} from './displays.mjs';
+import {createBenchmarkSetup} from './benchmark-setup.mjs';
+import {createShaderCache} from './shader-cache.mjs';
+import {createPerformanceAudit} from './performance-audit.mjs';
+import {createExternalAdjustments} from './external-adjustments.mjs';
+import {createBoostPlan} from './boost-plan.mjs';
+import {createFirmwareWorkflow} from './firmware-workflow.mjs';
+import {createFpsFlow} from './fps-flow.mjs';
+import {createFpsResume} from './fps-resume.mjs';
+import {verifyReleaseIntegrity} from './release-integrity.mjs';
+import {createCompatibility,supportedPlatform} from './compatibility.mjs';
+import {createReleaseTools} from './release-tools.mjs';
+import {createFrameCapture} from './frame-capture.mjs';
+import {createSessionSummaryStore} from './session-summary-store.mjs';
+import {createCpuTopology} from './cpu-topology.mjs';
+import {createChangeHistory} from './change-history.mjs';
+
+const root=path.dirname(fileURLToPath(import.meta.url));
+const verification=process.argv.includes('--verify-free');
+const verificationDirectory=process.env.CSBOOST_VERIFICATION_DIR;
+app.setName('CSBOOST');
+app.setAppUserModelId('app.csboost.free');
+app.setPath('userData',verification&&verificationDirectory?path.join(verificationDirectory,'profile'):path.join(app.getPath('appData'),'csboost-free'));
+Menu.setApplicationMenu(null);
+let auth,watcher,window,sessions,benchmarkRunner,recoveryGuard,frameCapture,resumeOnLogin,closing=false,quitChecking=false,canCloseApp=async()=>({allowed:true,reasons:[]});
+const diagnostics={product:'CSBOOST',edition:'independent-free',consoleErrors:[],preloadErrors:[],failedLoads:[],network:[],ok:false};
+if(!verification&&!app.requestSingleInstanceLock())app.quit();
+else app.whenReady().then(async()=>{
+  if(!supportedPlatform())throw Error('Esta distribuição requer Windows 10 ou 11 x64, em CPU AMD ou Intel.');
+  const releaseRoot=path.resolve(root,'../..');
+  const integrity=app.isPackaged?await verifyReleaseIntegrity({appRoot:root,manifestPath:path.join(releaseRoot,'build-manifest.json'),version:app.getVersion()}):{verified:false,development:true,authenticityVerified:false};
+  const data=app.getPath('userData');
+  const changeHistory=createChangeHistory({directory:path.join(data,'change-history'),discardAuditDirectories:[data,path.join(data,'video-backups'),path.join(data,'windows-backups'),path.join(data,'nvidia-backups')]});
+  const recordHistoryEvent=event=>event?.kind==='resolve'?changeHistory.resolve(event):changeHistory.record(event);
+  resumeOnLogin=createFpsResume({app});
+  if(!verification)resumeOnLogin.consume(process.argv);
+  await fs.mkdir(data,{recursive:true});
+  recoveryGuard=await startRecoveryGuard({directory:data});
+  const profiles=createProfiles(path.join(data,'profiles'));
+  watcher=createWatcher({workerPath:path.join(root,'native','csboost-watcher.exe')});
+  let installation;
+  const system=createSystem({dataDirectory:data,checkGameRunning:()=>watcher.isGameRunning(),detect:async()=>{
+    const detected=verification&&process.argv.includes('--verify-no-steam')?{installed:false,cs2Installed:false}:await detectSteam();
+    if(installation&&['steamPath','gamePath'].some(key=>(installation[key]||'').toLowerCase()!==(detected[key]||'').toLowerCase()))throw Error('A instalação Steam/CS2 mudou. Reabra o CSBOOST para atualizar o monitor antes de continuar.');
+    return detected;
+  }});
+  installation=await system.refreshSteam();
+  await watcher.start({gamePath:installation.cs2Installed?installation.gamePath:undefined});
+  auth=createLocalSteamAuth({openid:createSteamAuth({sessionPath:path.join(data,'steam-session.json'),openExternal:url=>shell.openExternal(url)}),system:{refreshSteam:async()=>installation},readActiveUser:()=>watcher.readActiveUser()});
+  const publication=createPublicationServices({directory:data,openExternal:url=>shell.openExternal(url)});
+  const {content,proLibrary,proMedia}=publication;
+  const benchmarks=createBenchmarks(path.join(data,'benchmarks'));
+  const optimizations=createOptimizations({directory:path.join(data,'video-backups'),system,additionalLabels:Object.fromEntries(PRO_VIDEO_FIELDS.map(f=>[f.key,f.label])),planner:(text,options)=>options?.preset==='professional'?planProVideo(text,options.values):planVideoPreset(text,options)});
+  const discordTuning=createDiscordTuning({directory:path.join(data,'discord-backups')});
+  const windowsTuning=createWindowsTuning({directory:path.join(data,'windows-backups'),system});
+  const processTuning=createProcessTuning({directory:path.join(data,'process-backups'),system,processes:watcher.processOperation});
+  const cpuAffinity=createCpuAffinity({directory:path.join(data,'affinity-backups'),system,processes:watcher.processOperation,runWorker:watcher.cpuOperation});
+  const nvidia=createNvidia({dataDirectory:path.join(data,'nvidia-backups'),isGameRunning:()=>system.isGameRunning()});
+  const nvidiaControlPanel=createNvidiaControlPanel({openPath:file=>shell.openPath(file)});
+  const amdTuning=createAmdTuning({openPath:file=>shell.openPath(file),isGameRunning:()=>system.isGameRunning()});
+  const gpuDiagnostics=createGpuDiagnostics({openPath:file=>shell.openPath(file),isGameRunning:()=>system.isGameRunning()});
+  const memoryTuning=createMemoryTuning({directory:path.join(data,'hardware-reference'),amdTuning});
+  const displays=createDisplays();
+  const cpuTopology=createCpuTopology();
+  const shaderCache=createShaderCache({directory:path.join(data,'shader-backups'),system,isGameRunning:()=>system.isGameRunning()});
+  const engine=createOptimizationEngine({system,optimizations,windowsTuning,processTuning,cpuAffinity,nvidia,amdTuning,memoryTuning});
+  const getCpuTopology=()=>cpuTopology.inspect();
+  const benchmarkAdapter=createBenchmarkAdapter({directory:path.join(data,'benchmark-runs'),system,processTuning,cpuAffinity,getCpuTopology});
+  const getSteamId=async()=>(await auth.getSession())?.steamId;
+  const profileTransfer=createProfileTransfer({profiles,system,getSteamId});
+  const performanceAudit=createPerformanceAudit({directory:path.join(data,'performance-reference'),system,optimizations,windowsTuning,nvidia,displays,amdTuning,memoryTuning,getSteamId});
+  const externalAdjustments=createExternalAdjustments({system,windowsTuning,optimizations});
+  const boostPlan=createBoostPlan({directory:path.join(data,'boost-plan'),system,optimizations,windowsTuning,nvidia,getSteamId,getCpuTopology,getLatestDiagnosis:async()=>{const report=(await benchmarks.list()).find(row=>row.context?.frametimes?.bottleneck);return report?{benchmark:report,diagnosis:report.context.frametimes.bottleneck}:null;},onHistoryEvent:recordHistoryEvent});
+  const firmwareWorkflow=createFirmwareWorkflow({directory:path.join(data,'firmware-workflow'),system,amdTuning,memoryTuning,getSteamId});
+  const benchmarkFpsCap=createBenchmarkFpsCap({directory:path.join(data,'benchmark-runs'),system,getSteamId});
+  const benchmarkContext=createBenchmarkContext({directory:path.join(data,'benchmark-context'),system,amdTuning,memoryTuning,optimizations,nvidia,getSteamId});
+  frameCapture=createFrameCapture({directory:path.join(data,'frame-capture')});
+  const sessionSummaryStore=createSessionSummaryStore({directory:path.join(data,'session-summaries')});
+  benchmarkRunner=createBenchmarkRunner({directory:path.join(data,'benchmark-runs'),resolveInstallation:()=>system.refreshSteam(),isGameRunning:()=>system.isGameRunning(),isGameFocused:()=>watcher.isGameFocused(),launch:()=>system.launchCS2({withConfig:false,benchmarkRun:true}),fpsCap:benchmarkFpsCap,frameCapture,
+    prepare:async request=>{await processTuning.readSessionContext({refresh:true});await cpuAffinity.readSessionContext({refresh:true});let contextWarning;try{await benchmarkContext.begin(request);}catch(error){contextWarning=error.message;}return {...await benchmarkAdapter.prepare(request),contextWarning};},
+    onGameStart:benchmarkAdapter.onGameStart,cleanup:benchmarkAdapter.cleanup,
+    saveResult:async({logPath,id,metadata})=>{let context;try{context=await benchmarkContext.complete(id,{powerPlan:metadata.preparation?.powerPlan??'unknown',powerReason:metadata.preparation?.powerReason??'unknown',powerPolicy:metadata.preparation?.powerPolicy??null,frametimes:metadata.frametimes});}catch(error){context={version:1,runId:id,frametimes:metadata.frametimes,powerPlan:metadata.preparation?.powerPlan??'unknown',powerReason:metadata.preparation?.powerReason??'unknown',warnings:['Contexto parcial: '+error.message]};}return benchmarks.importFile(logPath,{context});}});
+  sessions=createGameSessions({directory:data,system,processTuning,cpuAffinity,cpuTopology,frameCapture,sessionSummaryStore,isGameRunning:()=>system.isGameRunning(),onHistoryEvent:recordHistoryEvent});
+  const benchmarkSetup=createBenchmarkSetup({directory:path.join(data,'benchmark-setup'),benchmarks,runner:benchmarkRunner,isGameRunning:()=>system.isGameRunning(),getBoostState:()=>boostPlan.inspect(),getPowerPlans:()=>system.getPowerPlans()});
+  const fpsFlow=createFpsFlow({benchmarkSetup,boostPlan,getSteamId,isGameRunning:()=>system.isGameRunning(),sessions,resumeOnLogin});
+  if(!verification){await frameCapture.recover();await benchmarkRunner.recover();if(!benchmarkRunner.isActive()){await benchmarkAdapter.recover();await sessions.recover();}}
+  const compatibility=createCompatibility({system,engine,watcher,recoveryGuard,directory:data,version:app.getVersion(),integrity});
+  const releaseTools=createReleaseTools({shell,desktop:app.getPath('desktop'),executable:process.execPath,readme:path.join(releaseRoot,'COMO-USAR.txt'),notices:path.join(releaseRoot,'docs','CREDITOS.md'),privacy:path.join(releaseRoot,'docs','PRIVACIDADE.md')});
+  const recoveryExit=async()=>{
+    recoveryGuard.ensureAvailable();
+    const result=await dialog.showMessageBox(window,{type:'warning',title:'Recuperar sessão',message:'O monitor de sessão parou.',detail:'O CSBOOST será encerrado para o auxiliar separado tentar restaurar prioridades, afinidade e preparação temporária do benchmark. Ajustes persistentes do Boost continuam salvos. Reabra o aplicativo e confira o resultado da recuperação.',buttons:['Encerrar e recuperar','Voltar'],defaultId:1,cancelId:1,noLink:true});
+    if(result.response!==0)return {canceled:true};
+    recoveryGuard.ensureAvailable();if(!watcher.status().failed)throw Error('O monitor já foi recuperado.');
+    sessions.dispose();benchmarkRunner.dispose();auth.dispose();closing=true;await watcher.stop();app.exit(0);
+    return {requested:true};
+  };
+  const controller=createController({publication,publicationPolicy:PUBLICATION_POLICY,version:app.getVersion(),discordTuning,compatibility,releaseTools,auth,profiles,system,content,proLibrary,proMedia,clipboard,benchmarks,sessions,sessionSummaryStore,optimizations,windowsTuning,engine,nvidia,nvidiaControlPanel,amdTuning,gpuDiagnostics,memoryTuning,displays,profileTransfer,benchmarkSetup,fpsFlow,shaderCache,performanceAudit,externalAdjustments,boostPlan,firmwareWorkflow,benchmarkRunner,frameCapture,cpuTopology,recoveryGuard,monitor:watcher,recoveryExit,dialog,shell,changeHistory,onAuthChanged:()=>window?.webContents.send('csboost:auth-changed')});
+  canCloseApp=async()=>decideClose({session:await sessions.getState(),benchmark:{...await benchmarkRunner.getState(),active:benchmarkRunner.isActive()},boost:await boostPlan.inspect(),operation:(await controller.getState()).operation});
+  const expectedUrl=path.join(root,'renderer','index.html');
+  function isOwnFrame(event){try{return event.sender===window.webContents&&event.senderFrame===window.webContents.mainFrame&&path.resolve(fileURLToPath(new URL(event.senderFrame.url)))===path.resolve(expectedUrl);}catch{return false;}}
+  for(const [method,handler] of Object.entries({...controller,minimize:()=>window.minimize(),quit:()=>app.quit()}))ipcMain.handle('csboost:'+method,async(event,...args)=>{
+    if(!isOwnFrame(event))return {ok:false,error:'Origem de solicitação inválida.'};
+    if(args.length>1)return {ok:false,error:'Solicitação inválida.'};
+    try{return {ok:true,value:await handler(...args)};}catch(error){return {ok:false,error:error.message||'Não foi possível concluir a operação.'};}
+  });
+  async function createWindow(){
+  const area=screen.getPrimaryDisplay().workAreaSize;
+  window=new BrowserWindow({width:Math.min(1400,area.width),height:Math.min(864,area.height),minWidth:Math.min(960,area.width),minHeight:Math.min(640,area.height),frame:false,backgroundColor:'#141416',icon:path.join(process.resourcesPath,'csboost.ico'),show:!verification,webPreferences:{preload:path.join(root,'preload.cjs'),contextIsolation:true,nodeIntegration:false,sandbox:true,webSecurity:true}});
+    window.on('close',event=>{if(!closing&&!verification){event.preventDefault();app.quit();}});
+  window.webContents.setWindowOpenHandler(()=>({action:'deny'}));
+  window.webContents.session.setPermissionRequestHandler((_webContents,_permission,callback)=>callback(false));
+  window.webContents.session.setPermissionCheckHandler(()=>false);
+  window.webContents.on('will-navigate',(event,url)=>{if(url!==window.webContents.getURL())event.preventDefault();});
+  window.webContents.on('console-message',details=>{if(details.level==='error')diagnostics.consoleErrors.push(details.message);});
+  window.webContents.on('preload-error',(_,preloadPath,error)=>diagnostics.preloadErrors.push({preloadPath,message:error.message}));
+  window.webContents.on('did-fail-load',(_,code,description,url,mainFrame)=>diagnostics.failedLoads.push({code,description,url,mainFrame}));
+  window.webContents.session.webRequest.onBeforeRequest({urls:['http://*/*','https://*/*']},(details,callback)=>{diagnostics.network.push({url:details.url,blocked:true});callback({cancel:true});});
+  await window.loadFile(expectedUrl);
+  }
+  await createWindow();
+  app.on('second-instance',(_event,argv)=>{try{resumeOnLogin.consume(argv);}catch(error){dialog.showErrorBox('Retomada FPS+',error.message);}if(!window||window.isDestroyed())createWindow().catch(error=>dialog.showErrorBox('CSBOOST',error.message));else{window.show();window.focus();}});
+  if(verification){
+    window.webContents.setBackgroundThrottling(false);
+    await new Promise(resolve=>setTimeout(resolve,1000));
+    await window.webContents.executeJavaScript("console.error('__CSBOOST_DIAGNOSTIC_PROBE__')");await new Promise(resolve=>setTimeout(resolve,50));
+    diagnostics.consoleCaptureVerified=diagnostics.consoleErrors.includes('__CSBOOST_DIAGNOSTIC_PROBE__');diagnostics.consoleErrors=diagnostics.consoleErrors.filter(message=>message!=='__CSBOOST_DIAGNOSTIC_PROBE__');
+    diagnostics.integrity=integrity;
+    diagnostics.scenario=process.argv.includes('--verify-no-steam')?'missing-steam-detector-simulation':'normal-read-only';
+    diagnostics.view=await window.webContents.executeJavaScript(`({title:document.title,text:document.body.innerText,buttons:[...document.querySelectorAll('button')].map(b=>b.textContent.trim()),bridge:!!window.csboost})`);
+    diagnostics.steam=await system.refreshSteam();
+    diagnostics.hardware=await system.getSystemInfo();
+    diagnostics.power=await system.getPowerPlans();
+    diagnostics.cpuDistribution=await cpuAffinity.inspect();
+    diagnostics.nvidia=await nvidia.inspect({preset:'competitive'});
+    diagnostics.amd=await amdTuning.inspect();
+    diagnostics.memory=await memoryTuning.inspect();
+    diagnostics.displays=await displays.inspect();
+    diagnostics.benchmarkMap=await benchmarkRunner.inspect().then(value=>value.map).catch(error=>({installed:false,reason:error.message}));
+    diagnostics.recoveryGuard=recoveryGuard.getState();
+    diagnostics.watcher=watcher.status();
+    diagnostics.localSteam={available:!!await auth.getLocalIdentity(),identitySource:'steam-local',selectionPerformed:false};
+    diagnostics.fpsResume=resumeOnLogin.status();
+    diagnostics.ok=diagnostics.view.title==='CSBOOST'&&diagnostics.view.bridge&&diagnostics.view.buttons.filter(x=>x.includes('Entrar com a Steam')).length===1&&!/Entrar com o Google|Entrar com email|Escolha seu plano/.test(diagnostics.view.text)&&!diagnostics.preloadErrors.length&&!diagnostics.failedLoads.some(x=>x.mainFrame);
+    diagnostics.ok=diagnostics.ok&&diagnostics.consoleCaptureVerified&&!diagnostics.consoleErrors.length;
+    await fs.mkdir(verificationDirectory,{recursive:true});
+    await fs.writeFile(path.join(verificationDirectory,'free-login.png'),(await window.webContents.capturePage()).toPNG());
+    await fs.writeFile(path.join(verificationDirectory,'verification.json'),JSON.stringify(diagnostics,null,2));
+    await watcher.stop();await recoveryGuard.disarm();app.exit(diagnostics.ok?0:1);
+  }
+}).catch(async error=>{await watcher?.stop();if(verification&&verificationDirectory){await fs.mkdir(verificationDirectory,{recursive:true});await fs.writeFile(path.join(verificationDirectory,'verification.json'),JSON.stringify({...diagnostics,startupError:error.stack},null,2));app.exit(1);}else{dialog.showErrorBox('CSBOOST',error.message);app.quit();}});
+app.on('before-quit',event=>{if(closing||verification)return;event.preventDefault();if(quitChecking)return;quitChecking=true;(async()=>{const decision=await canCloseApp();if(!decision.allowed)throw Error(decision.reasons.join('\n'));await sessions?.stop();auth?.dispose();sessions?.dispose();benchmarkRunner?.dispose();await watcher?.stop();if(recoveryGuard?.getState().available)await recoveryGuard.disarm();closing=true;app.quit();})().catch(error=>{dialog.showErrorBox('Concluir recuperação',error.message);}).finally(()=>{quitChecking=false;});});
+app.on('window-all-closed',()=>{if(closing||verification)app.quit();});

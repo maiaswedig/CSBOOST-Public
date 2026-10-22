@@ -1,0 +1,40 @@
+const fs=require('node:fs/promises');
+const path=require('node:path');
+module.exports=async({js,click,win,output,errors,proLibrary,proMedia,profiles})=>{
+  const before=await profiles.list();const checks=[];
+  async function until(code,label){for(let i=0;i<160;i++){if(await js(code))return;await new Promise(resolve=>setTimeout(resolve,250));}throw Error('Public media QA timed out: '+label);}
+  const catalog=await proLibrary.catalog(),donk=catalog.players.find(player=>player.id==='donk');if(!donk)throw Error('Public catalog lacks requested reference');
+  await click('Times e configs');await until("document.querySelectorAll('.pro-player-card').length>0",'catalog');
+  await js("(()=>{const input=document.querySelector('.pro-search');input.value='donk';input.dispatchEvent(new Event('input',{bubbles:true}));})()");
+  await js("document.querySelector('.pro-player-card').click()");await until("document.querySelector('.pro-player-detail h2')?.textContent==='donk'",'canonical player');
+  await js("document.querySelector('.pro-detail-heading').scrollIntoView({block:'center'})");
+  await until("!!document.querySelector('.pro-hero-portrait.has-image img')",'real portrait');
+  await until("!!document.querySelector('.pro-hero-team .has-image img')",'real team logo');
+  const media=await proMedia.get({kind:'player',id:'donk'});if(!media.available||media.sourceUrl!=='https://prosettings.net/players/donk/')throw Error('Photo attribution mismatch');
+  checks.push('real canonical donk settings and portrait, current team logo through closed IPC');
+  await new Promise(resolve=>setTimeout(resolve,600));
+  await fs.writeFile(path.join(output,'pro-real-layout.json'),JSON.stringify(await js("[...document.querySelectorAll('.pro-library-layout,.pro-browse,.pro-player-detail,.pro-detail-heading,.pro-hero-portrait')].map(node=>({className:node.className,bounds:JSON.parse(JSON.stringify(node.getBoundingClientRect())),position:getComputedStyle(node).position}))"),null,2));
+  await fs.writeFile(path.join(output,'pro-real-portrait.png'),(await win.webContents.capturePage()).toPNG());
+  await click('Conferir diferenças');await until("!!document.querySelector('.pro-config-preview .config-thumbnail svg')",'composed config thumbnail');
+  await js("document.querySelector('.pro-config-preview').scrollIntoView({block:'start'})");await new Promise(resolve=>setTimeout(resolve,300));await fs.writeFile(path.join(output,'pro-real-config-preview.png'),(await win.webContents.capturePage()).toPNG());checks.push('public selected settings produce attributed composed crosshair thumbnail and differences');
+  await click('Ranking Valve');await until("document.querySelectorAll('.ranking-row').length===24",'official ranking grid');
+  const source=await js("document.querySelector('.data-source').textContent");
+  await click('Próxima');await until("document.querySelector('.ranking-place')?.textContent==='25'",'next ranking page');checks.push('official Valve rankings paginate at 24 without changing source order');
+  await js("(()=>{const input=document.querySelector('.ranking-search');input.value='FURIA';input.dispatchEvent(new Event('input',{bubbles:true}));})()");await until("document.querySelectorAll('.ranking-row').length===1",'full-list search');await until("!!document.querySelector('.ranking-team-logo.has-image')",'FURIA logo');
+  await fs.writeFile(path.join(output,'ranking-real-furia.png'),(await win.webContents.capturePage()).toPNG());checks.push('real FURIA logo with date-specific Valve roster and points');
+  await js("(()=>{const input=document.querySelector('.ranking-search');input.value='G2';input.dispatchEvent(new Event('input',{bubbles:true}));})()");
+  await click('huNter-');await until("document.querySelector('.pro-player-detail h2')?.textContent==='huNter'",'confirmed roster alias and canonical config');
+  const hunter=catalog.players.find(player=>player.id==='hunter');if(!hunter||!hunter.aliases.includes('huNter-')||(await proLibrary.player({id:hunter.id})).source.url!=='https://prosettings.net/players/'+hunter.id+'/')throw Error('Roster canonical identity mismatch');checks.push('real huNter- roster alias opens the canonical huNter config without guessing a URL');
+  await click('Ranking Valve');await until("!!document.querySelector('.ranking-search')",'return from exact roster config');
+  await js("(()=>{const input=document.querySelector('.ranking-search');input.value='';input.dispatchEvent(new Event('input',{bubbles:true}));})()");await new Promise(resolve=>setTimeout(resolve,1500));await fs.writeFile(path.join(output,'ranking-real-grid.png'),(await win.webContents.capturePage()).toPNG());
+  const astralis=await proMedia.get({kind:'team',name:'Astralis'});if(!astralis.available||!astralis.dataUrl.startsWith('data:image/svg+xml;base64,'))throw Error('Public vector logo fallback failed');checks.push('real Astralis SVG is rebuilt as safe geometry and delivered only as an image');
+  const known=catalog.players.flatMap(player=>[player.name,...player.aliases]).map(name=>name.toLowerCase());
+  const unknown=await js("[...document.querySelectorAll('.roster-config-link')].map(button=>button.textContent).find(name=>!"+JSON.stringify(known)+".includes(name.toLowerCase()))");if(!unknown)throw Error('Unknown roster fixture not found in real publication');
+  await click(unknown);await until("document.querySelector('.pro-search')?.value==="+JSON.stringify(unknown),'unknown roster search');if(await js("!!document.querySelector('.pro-player-detail')||!!document.querySelector('.pro-config-preview')"))throw Error('Unknown roster retained a previous player config');checks.push('unknown roster link clears the previous player and preview instead of showing a stale config');
+  await click('Ranking Valve');await until("!!document.querySelector('.ranking-list')",'return from unknown roster');
+  for(const view of ['Ranking Valve','Times e configs','Config do CS2']){await click(view);win.setContentSize(960,640);await new Promise(resolve=>setTimeout(resolve,350));if(!await js("[document.documentElement,document.querySelector('.workspace'),document.querySelector('.page')].every(node=>!node||node.scrollWidth<=node.clientWidth+2)"))throw Error('Horizontal overflow: '+view);}
+  await until("!!document.querySelector('.profile-button .config-thumbnail svg')",'saved config thumbnail');checks.push('saved-profile thumbnail and all three pages fit minimum window');
+  if(JSON.stringify(await profiles.list())!==JSON.stringify(before))throw Error('Read-only preview changed profiles');checks.push('real public media preview preserves fixture profiles and never applies a game setting');
+  if(errors.length)throw Error('Renderer errors: '+errors.join('\n'));
+  await fs.writeFile(path.join(output,'pro-media-results.json'),JSON.stringify({ok:true,mode:'real-public-pages-and-raster-media-read-only',consoleCaptureVerified:true,catalogPlayers:catalog.players.length,rankSource:source,checks,rendererErrors:errors,userSettingsChanged:false,gameLaunched:false,privateOriginalServicesUsed:false},null,2));
+};
