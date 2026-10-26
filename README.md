@@ -6,13 +6,13 @@ Aplicativo independente para Windows x64 com perfis locais de CS2, editor de mir
 
 ## Download
 
-[Baixar CSBOOST 1.30.0](https://github.com/maiaswedig/CSBOOST-Public/releases/tag/v1.30.0). Extraia todo o ZIP antes de abrir CSBOOST.exe. Steam e CS2 são instalações separadas.
+[Instalador (.exe)](https://github.com/maiaswedig/CSBOOST-Public/releases/download/v1.30.0/CSBOOST-1.30.0-Windows-x64-Setup.exe) para instalação guiada; siga as etapas e abra CSBOOST.  
+[ZIP portátil](https://github.com/maiaswedig/CSBOOST-Public/releases/download/v1.30.0/CSBOOST-1.30.0-Windows-x64.zip) para extrair e abrir CSBOOST.exe sem instalar. Steam e CS2 são instalações separadas.
 
-Arquivo: CSBOOST-1.30.0-Windows-x64.zip
+SHA-256 do instalador: `5a0f9bb78dbdbab2046a4a00929169b7080f25d35b3d2b74cd026c2a1771b155`  
+SHA-256 do ZIP: `5df68c9dc67048a4f7c234ca9e3169b998446fe79a5f94c57428216222f28125`
 
-SHA-256: 5df68c9dc67048a4f7c234ca9e3169b998446fe79a5f94c57428216222f28125
-
-O aplicativo não tem assinatura digital; o Windows pode exibir aviso de publicador desconhecido. Confira o hash publicado na página oficial do release.
+O aplicativo e o instalador não têm assinatura digital; o Windows pode exibir aviso de publicador desconhecido ou SmartScreen. Confira o hash correspondente ao pacote baixado.
 
 ## Escopo desta edição
 
