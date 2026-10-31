@@ -21,7 +21,7 @@
       const url = URL.createObjectURL(file);
       const link = document.createElement("a");
       link.href = url;
-      link.download = "PCBOOST-0.1.40.0-Windows-x64.zip";
+      link.download = "PCBOOST-0.1.41.0-Windows-x64.zip";
       link.click();
       setTimeout(() => URL.revokeObjectURL(url), 60000);
       status.textContent = "Download iniciado. SHA-256 conferido.";
