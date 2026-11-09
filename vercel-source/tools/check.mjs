@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { createHash } from 'node:crypto';
+import { createHash, X509Certificate, verify } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { resolve, dirname } from 'node:path';
 
@@ -17,4 +17,11 @@ for (const part of parts) {
 }
 if (hash.digest('hex').toUpperCase() !== expected.toUpperCase()) throw new Error('Partes do ZIP não correspondem ao SHA-256');
 if (!html.includes('CSBOOST')) throw new Error('Download CSBOOST ausente');
+const envelope = JSON.parse(readFileSync(resolve(root, 'downloads/PCBOOST-update.json'), 'utf8'));
+const payload = Buffer.from(envelope.Payload, 'base64');
+const signer = new X509Certificate(readFileSync(resolve(root, 'downloads/PCBOOST-update-signing.cer')));
+if (!verify('sha256', payload, signer.publicKey, Buffer.from(envelope.Signature, 'base64'))) throw new Error('Assinatura do atualizador inválida');
+const release = JSON.parse(payload.toString('utf8'));
+if (release.Version !== version || release.Sha256.toUpperCase() !== expected.toUpperCase()
+  || release.Size !== parts.reduce((size, part) => size + readFileSync(resolve(root, '.' + part)).length, 0)) throw new Error('Manifesto do atualizador diverge do download');
 console.log(`OK: manifesto ${version}, partes e SHA-256 do PCBOOST conferidos`);

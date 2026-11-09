@@ -6,6 +6,15 @@
   "outputDirectory": "public",
   "headers": [
     {
+      "source": "/downloads/PCBOOST-update.json",
+      "headers": [
+        {
+          "value": "no-store, max-age=0",
+          "key": "Cache-Control"
+        }
+      ]
+    },
+    {
       "source": "/downloads/PCBOOST-latest.txt",
       "headers": [
         {
